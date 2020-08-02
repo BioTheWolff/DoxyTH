@@ -130,6 +130,9 @@ dmypy.json
 
 # test files
 *.test.py
+working_dir/
+translations/
+.dthstems/
 
 # .idea dir
 .idea/

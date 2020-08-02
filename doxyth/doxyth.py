@@ -2,6 +2,22 @@ import argparse
 import re
 import os
 from .verify import verify_directory
+import shutil
+import errno
+from os.path import isfile, join, isdir
+
+
+def copy(src, dest):
+    if isdir(dest):
+        shutil.rmtree(dest)
+    try:
+        shutil.copytree(src, dest)
+    except OSError as e:
+        # If the error was caused because the source wasn't a directory
+        if e.errno == errno.ENOTDIR:
+            shutil.copy2(src, dest)
+        else:
+            print('Directory not copied. Error: %s' % e)
 
 
 class DoxyTH:
@@ -44,13 +60,19 @@ class DoxyTH:
             self.verbose = args.verbose
             self.__analyze_translations_dir(args.translation_dir)
 
+            if not self.available_translations:
+                print("No applicable translation detected. Aborting.")
+                exit(0)
+
             # Read all the languages docs
             for lang in self.available_translations:
                 if self.verbose:
                     print(f"Reading docs of language code {lang}")
                 self.langs[lang] = self.__read_docs(f"{args.translation_dir}/{lang}")
+                print(self.langs[lang].keys())
 
-            # Backup files in a directory (".doxythstems")
+            # Backup files in a directory (".dthstems")
+            copy(args.working_dir, ".dthstems")
 
     def __analyze_translations_dir(self, path):
         for d in os.listdir(path):
@@ -65,30 +87,36 @@ class DoxyTH:
             self.available_translations.append(d)
 
     def __read_docs(self, path):
-        with open(path) as f:
-            lines = f.readlines()
-
+        files = [f for f in os.listdir(path) if isfile(join(path, f)) and f.endswith(".dthdoc")]
         final = {}
-        buffer_name = None
-        buffer = []
-        just_read_id = False
-        for line in lines:
-            if re.match(r"\s*@doc_id\s*", line.strip()):
-                buffer_name = re.split(r"\s*@doc_id\s*", line.strip())[-1]
-                just_read_id = True
-                continue
-            elif line.strip() == '"""' and just_read_id:
-                just_read_id = False
-            elif line.strip() == '"""' and not just_read_id:
-                if self.verbose:
-                    print(f"Linked ID {buffer_name} to a documentation.")
-                final[buffer_name] = buffer
-                buffer_name, buffer = None, []
-            else:
-                buffer.append(line.strip() + '\n')
 
-        if buffer or buffer_name:
-            raise Exception(f"Warning: Unexpected EOF while reading ID {buffer_name} in file '{path.split('/')[-1]}'")
+        for file in files:
+            with open(f"{path}/{file}") as f:
+                lines = f.readlines()
+
+            file_doc = {}
+            buffer_name = None
+            buffer = []
+            just_read_id = False
+            for line in lines:
+                if re.match(r"\s*@doc_id\s*", line.strip()):
+                    buffer_name = re.split(r"\s*@doc_id\s*", line.strip())[-1]
+                    just_read_id = True
+                    continue
+                elif line.strip() == '"""' and just_read_id:
+                    just_read_id = False
+                elif line.strip() == '"""' and not just_read_id:
+                    if self.verbose:
+                        print(f"Linked ID {buffer_name} to a documentation.")
+                    file_doc[buffer_name] = buffer
+                    buffer_name, buffer = None, []
+                else:
+                    buffer.append(line.strip() + '\n')
+
+            if buffer or buffer_name:
+                raise Exception(f"Warning: Unexpected EOF while reading ID {buffer_name} in file '{path.split('/')[-1]}'")
+
+            final = {**final, **file_doc}
 
         return final
 
