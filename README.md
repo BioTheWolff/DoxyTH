@@ -1,2 +1,2 @@
 # DoxyTH
-Doxygen inline-documentation Translator Helper
+Doxygen inline-documentation Translation Helper
