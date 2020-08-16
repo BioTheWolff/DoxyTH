@@ -4,9 +4,10 @@ import os
 from .verify import verify_directory
 from os.path import isfile, join, isdir
 import subprocess
+import json
 
 
-class DoxyTH:
+class Gendoc:
     valid_codes = ['ab', 'aa', 'af', 'ak', 'sq', 'am', 'ar', 'an', 'hy', 'as', 'av', 'ae', 'ay', 'az', 'bm', 'ba', 'eu',
                    'be', 'bn', 'bh', 'bi', 'bs', 'br', 'bg', 'my', 'ca', 'ch', 'ce', 'ny', 'zh', 'cv', 'kw', 'co', 'cr',
                    'hr', 'cs', 'da', 'dv', 'nl', 'dz', 'en', 'eo', 'et', 'ee', 'fo', 'fj', 'fi', 'fr', 'ff', 'gl', 'ka',
@@ -55,8 +56,11 @@ class DoxyTH:
                     print(f"{lang.upper()}: Reading docs")
                 self.langs[lang] = self.__read_docs(f"{args.translation_dir}/{lang}")
 
+            # write translations into a json file so the doxyth executable can fetch translations quickly
+            self.__write_translations_to_file()
+
             # Check or create doxygen config
-            self.__manage_doxyfile(args.translation_dir)
+            self.__setup_doxygen_files(args.translation_dir)
 
             # Change Doxyfile and run doxygen for it to directly analyse files modified by the script using
             # FILE_PATTERNS
@@ -64,9 +68,9 @@ class DoxyTH:
                 if self.verbose:
                     print(f"{lang.upper()}... ")
 
-
-
-    def __manage_doxyfile(self, translations_dir: str):
+    @staticmethod
+    def __setup_doxygen_files(translations_dir: str):
+        # Change the directory to have a / at the end for the Doxyfile
         if not translations_dir.endswith("/"):
             translations_dir += "/"
 
@@ -92,9 +96,34 @@ class DoxyTH:
             if re.match(r"^GENERATE_LATEX\s*=", line.strip()):
                 lines[n] = "GENERATE_LATEX = NO\n"
 
+            # The DoxyTH batch file that will tell the file ran by Doxygen what translation to read
+            if re.match(r"^FILTER_PATTERNS\s*=", line.strip()):
+                lines[n] = f"FILTER_PATTERNS = *py=.dthb\n"
+
+        with open('Doxyfile', 'w') as f:
+            f.writelines(lines)
+
+    @staticmethod
+    def __adapt_configs_to_lang(lang):
+        # Doxyfile
+        with open('Doxyfile') as f:
+            lines = f.readlines()
+
+        for n, line in enumerate(lines):
             # Change HTML output to docs/
             if re.match(r"^HTML_OUTPUT\s*=", line.strip()):
-                lines[n] = "HTML_OUTPUT = docs/\n"
+                lines[n] = f"HTML_OUTPUT = docs/{lang}/\n"
+
+        with open('Doxyfile', 'w') as f:
+            f.writelines(lines)
+
+        # batch file
+        with open('.dthb.bat') as b:
+            b.write(f"python -m doxyth.doxyth {lang} %1")
+
+    def __write_translations_to_file(self):
+        with open(".dtht", 'w') as f:
+            f.write(json.dumps(self.langs))
 
     def __analyze_translations_dir(self, path):
         for d in os.listdir(path):
@@ -145,4 +174,4 @@ class DoxyTH:
 
 
 if __name__ == '__main__':
-    DoxyTH()
+    Gendoc()
