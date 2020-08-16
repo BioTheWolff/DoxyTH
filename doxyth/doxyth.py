@@ -11,22 +11,7 @@ class DoxyTH:
         self.__flow(args)
 
     def __flow(self, args):
-        # self.docs = self.__fetch_docs(args.lang)
-        self.docs = {
-            'future_function': [
-                 'Template of a future function.\n',
-                 'Not implemented yet. Raises NotImplementedError if called.\n',
-                 '\n',
-                 'Raises:\n',
-                 '    Always raises NotImplementedError for now\n'
-            ],
-            'get_master_router': [
-                'Get master route from all the routers\n',
-                '\n',
-                ':return master: master router instance\n',
-                ':raises Exception: when no master or more than one is found\n'
-            ]
-        }
+        self.docs = self.__fetch_docs(args.lang)
         self.lines = self.__fetch_file_lines(args.file)
 
         lines = self.__modify_lines()
@@ -38,14 +23,14 @@ class DoxyTH:
     def __fetch_docs(lang):
         import json
 
-        with open(".dtht") as f:
+        with open(".dtht", encoding='utf-8') as f:
             buf = f.read()
         docs = json.loads(buf)
         return docs[lang]
 
     @staticmethod
     def __fetch_file_lines(path):
-        with open(path) as f:
+        with open(path, encoding='utf-8') as f:
             buf = f.readlines()
         return buf
 

@@ -59,14 +59,14 @@ class Gendoc:
             # write translations into a json file so the doxyth executable can fetch translations quickly
             self.__write_translations_to_file()
 
-            # Check or create doxygen config
+            # Edit or create doxygen config
             self.__setup_doxygen_files(args.translation_dir)
 
             # Change Doxyfile and run doxygen for it to directly analyse files modified by the script using
             # FILE_PATTERNS
             for lang in self.available_translations:
                 if self.verbose:
-                    print(f"{lang.upper()}... ")
+                    print(f"{lang.upper()}... ", end="")
 
     @staticmethod
     def __setup_doxygen_files(translations_dir: str):
@@ -79,7 +79,7 @@ class Gendoc:
             subprocess.call(['doxygen', '-s', '-g', 'Doxyfile'], stdout=fnull, stderr=subprocess.STDOUT)
             fnull.close()
 
-        with open('Doxyfile') as f:
+        with open('Doxyfile', encoding='utf-8') as f:
             lines = f.readlines()
 
         for n, line in enumerate(lines):
@@ -100,13 +100,13 @@ class Gendoc:
             if re.match(r"^FILTER_PATTERNS\s*=", line.strip()):
                 lines[n] = f"FILTER_PATTERNS = *py=.dthb\n"
 
-        with open('Doxyfile', 'w') as f:
+        with open('Doxyfile', 'w', encoding='utf-8') as f:
             f.writelines(lines)
 
     @staticmethod
     def __adapt_configs_to_lang(lang):
         # Doxyfile
-        with open('Doxyfile') as f:
+        with open('Doxyfile', encoding='utf-8') as f:
             lines = f.readlines()
 
         for n, line in enumerate(lines):
@@ -114,15 +114,15 @@ class Gendoc:
             if re.match(r"^HTML_OUTPUT\s*=", line.strip()):
                 lines[n] = f"HTML_OUTPUT = docs/{lang}/\n"
 
-        with open('Doxyfile', 'w') as f:
+        with open('Doxyfile', 'w', encoding='utf-8') as f:
             f.writelines(lines)
 
         # batch file
-        with open('.dthb.bat') as b:
+        with open('.dthb.bat', 'w', encoding='utf-8') as b:
             b.write(f"python -m doxyth.doxyth {lang} %1")
 
     def __write_translations_to_file(self):
-        with open(".dtht", 'w') as f:
+        with open(".dtht", 'w', encoding='utf-8') as f:
             f.write(json.dumps(self.langs))
 
     def __analyze_translations_dir(self, path):
@@ -142,7 +142,7 @@ class Gendoc:
         final = {}
 
         for file in files:
-            with open(f"{path}/{file}") as f:
+            with open(f"{path}/{file}", encoding='utf-8') as f:
                 lines = f.readlines()
 
             file_doc = {}
