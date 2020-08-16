@@ -162,7 +162,7 @@ class Gendoc:
                     file_doc[buffer_name] = buffer
                     buffer_name, buffer = None, []
                 else:
-                    buffer.append(line.strip() + '\n')
+                    buffer.append(line.rstrip() + '\n')
 
             if buffer or buffer_name:
                 raise Exception(f"Warning: Unexpected EOF while reading ID {buffer_name} in file "
