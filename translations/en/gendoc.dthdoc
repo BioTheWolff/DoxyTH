@@ -21,6 +21,7 @@ the translations (inside .dtht)
 
 Args:
     translations_dir: The translations directory taken by argparse
+    doxyfile_path: The path to an already-existing Doxygen configuration
 """
 
 @doc_id gendoc_cleanup

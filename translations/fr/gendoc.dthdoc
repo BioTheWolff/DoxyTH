@@ -21,6 +21,7 @@ traductions (.dtht).
 
 Args:
     translations_dir: Le dossier des traductions
+    doxyfile_path: Le chemin d'un fichier de config Doxygen déjà existant
 """
 
 @doc_id gendoc_cleanup

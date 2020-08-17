@@ -3,9 +3,10 @@ import re
 import os
 import subprocess
 import json
-from os.path import isfile, join, exists
-from .verify import verify_directory
-from .utils import valid_codes
+import shutil
+from os.path import isfile, join, exists, abspath
+from .verify import verify_full_directory
+from .utils import is_valid_lang_dir
 
 
 class Gendoc:
@@ -24,6 +25,8 @@ class Gendoc:
         parser.add_argument("--verify", help="Makes the documentation files be verified instead", action='store_true')
         parser.add_argument("-V", "--verbose", help="Activates the program verbose mode. Only available when not "
                                                     "verifying the files", action='store_true')
+        parser.add_argument("-D", "--doxyfile", help="The path to an already existing Doxyfile that DoxyTH will use as "
+                                                     "a base")
 
         args = parser.parse_args()
 
@@ -42,9 +45,9 @@ class Gendoc:
         self.langs = {}
 
         if args.verify:
-            self.analyze_translations_dir(args.translation_dir)
-            for lang in self.available_translations:
-                verify_directory(f"{args.translation_dir}/{lang}")
+            verify_full_directory(args.translation_dir)
+            exit(0)
+
         else:
             self.verbose = args.verbose
             self.analyze_translations_dir(args.translation_dir)
@@ -63,10 +66,10 @@ class Gendoc:
             self.write_translations_to_file()
 
             # Edit or create doxygen config
-            self.setup_doxygen_files(args.translation_dir)
+            self.setup_doxygen_files(args.translation_dir, args.doxyfile)
 
             # Create the main directory if not existant
-            if not exists(os.path.abspath(self.docs_output_path)):
+            if not exists(abspath(self.docs_output_path)):
                 os.mkdir(self.docs_output_path)
 
             # Change Doxyfile and run doxygen for it to directly analyse files modified by the script using
@@ -77,7 +80,7 @@ class Gendoc:
                 self.adapt_configs_to_lang(lang)
 
                 # Creating the language directory if not existant
-                if not exists(os.path.abspath(f'{self.docs_output_path}/{lang}')):
+                if not exists(abspath(f'{self.docs_output_path}/{lang}')):
                     os.mkdir(f'{self.docs_output_path}/{lang}')
 
                 fnull = open(os.devnull, 'w')
@@ -90,9 +93,9 @@ class Gendoc:
                     else:
                         print("OK")
 
-        self.cleanup()
+            self.cleanup()
 
-    def setup_doxygen_files(self, translations_dir: str):
+    def setup_doxygen_files(self, translations_dir: str, doxyfile_path):
         """
         ### @doc_id setup_doxygen
 
@@ -103,19 +106,31 @@ class Gendoc:
 
         Args:
             translations_dir: The translations directory taken by argparse
+            doxyfile_path: The path to an already-existing Doxygen configuration
         """
 
         # Change the directory to have a / at the end for the Doxyfile config
         if not translations_dir.endswith("/"):
             translations_dir += "/"
 
-        if self.verbose:
-            print("Generating Doxygen configuration... ", end="")
+        if doxyfile_path:
+            if self.verbose:
+                print("Using the provided Doxygen configuration to build config.")
+            shutil.copy(doxyfile_path, ".dthdoxy")
+        else:
+            if exists(abspath("Doxyfile")):
+                if self.verbose:
+                    print("Defaulting to existing Doxyfile config.")
+                shutil.copy('Doxyfile', ".dthdoxy")
+            else:
+                if self.verbose:
+                    print("Could not find a Doxyfile. Generating a new one.")
+                fnull = open(os.devnull, 'w')
+                subprocess.call(['doxygen', '-s', '-g', '.dthdoxy'], stdout=fnull, stderr=subprocess.STDOUT)
+                fnull.close()
 
-        if not os.path.exists('.dthdoxy'):
-            fnull = open(os.devnull, 'w')
-            subprocess.call(['doxygen', '-s', '-g', '.dthdoxy'], stdout=fnull, stderr=subprocess.STDOUT)
-            fnull.close()
+        if self.verbose:
+            print("Modifying Doxygen config file... ", end="")
 
         with open('.dthdoxy', encoding='utf-8') as f:
             lines = f.readlines()
@@ -219,10 +234,10 @@ class Gendoc:
         """
 
         for d in os.listdir(path):
-            if len(d) != 2:
-                continue
-            if d not in valid_codes:
-                print(f"Warning: ISO 639-1 language code not recognised: {d}. Ignoring this directory.")
+            res = is_valid_lang_dir(d)
+            if not res:
+                if len(d) == 2:
+                    print(f"Warning: ISO 639-1 language code not recognised: {d}. Ignoring this directory.")
                 continue
 
             if self.verbose:

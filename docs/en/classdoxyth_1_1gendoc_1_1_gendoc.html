@@ -80,8 +80,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a89890cce245dddf52103909dd28f83cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a277b0e020db46b44b6d678dfcb63363d"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdoxyth_1_1gendoc_1_1_gendoc.html#a277b0e020db46b44b6d678dfcb63363d">flow</a> (self, args)</td></tr>
 <tr class="separator:a277b0e020db46b44b6d678dfcb63363d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a98f05f5332c68227276393c2bf4563d7"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdoxyth_1_1gendoc_1_1_gendoc.html#a98f05f5332c68227276393c2bf4563d7">setup_doxygen_files</a> (self, str translations_dir)</td></tr>
-<tr class="separator:a98f05f5332c68227276393c2bf4563d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb619b3067386cc53dcfb0cba37840d3"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdoxyth_1_1gendoc_1_1_gendoc.html#afb619b3067386cc53dcfb0cba37840d3">setup_doxygen_files</a> (self, str translations_dir, doxyfile_path)</td></tr>
+<tr class="separator:afb619b3067386cc53dcfb0cba37840d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abca6ec79a827030113aec64769193200"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdoxyth_1_1gendoc_1_1_gendoc.html#abca6ec79a827030113aec64769193200">cleanup</a> (self)</td></tr>
 <tr class="separator:abca6ec79a827030113aec64769193200"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae78a243c3bc05324bc6e458fe995c213"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdoxyth_1_1gendoc_1_1_gendoc.html#ae78a243c3bc05324bc6e458fe995c213">adapt_configs_to_lang</a> (self, lang)</td></tr>
@@ -288,8 +288,8 @@ Args:
 </pre> 
 </div>
 </div>
-<a id="a98f05f5332c68227276393c2bf4563d7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a98f05f5332c68227276393c2bf4563d7">&#9670;&nbsp;</a></span>setup_doxygen_files()</h2>
+<a id="afb619b3067386cc53dcfb0cba37840d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb619b3067386cc53dcfb0cba37840d3">&#9670;&nbsp;</a></span>setup_doxygen_files()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -304,7 +304,13 @@ Args:
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">str&#160;</td>
-          <td class="paramname"><em>translations_dir</em>&#160;</td>
+          <td class="paramname"><em>translations_dir</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>doxyfile_path</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -320,6 +326,7 @@ the translations (inside .dtht)
 
 Args:
     translations_dir: The translations directory taken by argparse
+    doxyfile_path: The path to an already-existing Doxygen configuration
 </pre> 
 </div>
 </div>
