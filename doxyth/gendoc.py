@@ -1,24 +1,14 @@
 import argparse
 import re
 import os
-from .verify import verify_directory
-from os.path import isfile, join, exists
 import subprocess
 import json
+from os.path import isfile, join, exists
+from .verify import verify_directory
+from .utils import valid_codes
 
 
 class Gendoc:
-    valid_codes = ['ab', 'aa', 'af', 'ak', 'sq', 'am', 'ar', 'an', 'hy', 'as', 'av', 'ae', 'ay', 'az', 'bm', 'ba', 'eu',
-                   'be', 'bn', 'bh', 'bi', 'bs', 'br', 'bg', 'my', 'ca', 'ch', 'ce', 'ny', 'zh', 'cv', 'kw', 'co', 'cr',
-                   'hr', 'cs', 'da', 'dv', 'nl', 'dz', 'en', 'eo', 'et', 'ee', 'fo', 'fj', 'fi', 'fr', 'ff', 'gl', 'ka',
-                   'de', 'el', 'gn', 'gu', 'ht', 'ha', 'he', 'hz', 'hi', 'ho', 'hu', 'ia', 'id', 'ie', 'ga', 'ig', 'ik',
-                   'io', 'is', 'it', 'iu', 'ja', 'jv', 'kl', 'kn', 'kr', 'ks', 'kk', 'km', 'ki', 'rw', 'ky', 'kv', 'kg',
-                   'ko', 'ku', 'kj', 'la', 'lb', 'lg', 'li', 'ln', 'lo', 'lt', 'lu', 'lv', 'gv', 'mk', 'mg', 'ms', 'ml',
-                   'mt', 'mi', 'mr', 'mh', 'mn', 'na', 'nv', 'nd', 'ne', 'ng', 'nb', 'nn', 'no', 'ii', 'nr', 'oc', 'oj',
-                   'cu', 'om', 'or', 'os', 'pa', 'pi', 'fa', 'pl', 'ps', 'pt', 'qu', 'rm', 'rn', 'ro', 'ru', 'sa', 'sc',
-                   'sd', 'se', 'sm', 'sg', 'sr', 'gd', 'sn', 'si', 'sk', 'sl', 'so', 'st', 'es', 'su', 'sw', 'ss', 'sv',
-                   'ta', 'te', 'tg', 'th', 'ti', 'bo', 'tk', 'tl', 'tn', 'to', 'tr', 'ts', 'tt', 'tw', 'ty', 'ug', 'uk',
-                   'ur', 'uz', 've', 'vi', 'vo', 'wa', 'cy', 'wo', 'fy', 'xh', 'yi', 'yo', 'za', 'zu']
     available_translations = None
     verbose = None
     langs = None
@@ -66,7 +56,7 @@ class Gendoc:
             # Read all the languages docs
             for lang in self.available_translations:
                 if self.verbose:
-                    print(f"{lang.upper()}: Reading docs")
+                    print(f"{lang.upper()}: Reading docs... ", end="")
                 self.langs[lang] = self.read_docs(f"{args.translation_dir}/{lang}")
 
             # write translations into a json file so the doxyth executable can fetch translations quickly
@@ -102,8 +92,7 @@ class Gendoc:
 
         self.cleanup()
 
-    @staticmethod
-    def setup_doxygen_files(translations_dir: str):
+    def setup_doxygen_files(self, translations_dir: str):
         """
         ### @doc_id setup_doxygen
 
@@ -116,11 +105,14 @@ class Gendoc:
             translations_dir: The translations directory taken by argparse
         """
 
-        # Change the directory to have a / at the end for the Doxyfile
+        # Change the directory to have a / at the end for the Doxyfile config
         if not translations_dir.endswith("/"):
             translations_dir += "/"
 
-        if not os.path.exists('Doxyfile'):
+        if self.verbose:
+            print("Generating Doxygen configuration... ", end="")
+
+        if not os.path.exists('.dthdoxy'):
             fnull = open(os.devnull, 'w')
             subprocess.call(['doxygen', '-s', '-g', '.dthdoxy'], stdout=fnull, stderr=subprocess.STDOUT)
             fnull.close()
@@ -153,8 +145,10 @@ class Gendoc:
         with open('.dthdoxy', 'w', encoding='utf-8') as f:
             f.writelines(lines)
 
-    @staticmethod
-    def cleanup():
+        if self.verbose:
+            print("OK")
+
+    def cleanup(self):
         """
         ### @doc_id gendoc_cleanup
 
@@ -163,9 +157,15 @@ class Gendoc:
         "Cleans up" by removing the three files created by both the flow and the setup_doxygen_files functions
         """
 
+        if self.verbose:
+            print("Cleaning up... ", end="")
+
         os.remove(".dthb.bat")
         os.remove(".dtht")
         os.remove(".dthdoxy")
+
+        if self.verbose:
+            print("OK")
 
     def adapt_configs_to_lang(self, lang):
         """
@@ -221,12 +221,12 @@ class Gendoc:
         for d in os.listdir(path):
             if len(d) != 2:
                 continue
-            if d not in self.valid_codes:
+            if d not in valid_codes:
                 print(f"Warning: ISO 639-1 language code not recognised: {d}. Ignoring this directory.")
                 continue
 
             if self.verbose:
-                print(f"Found language code {d}")
+                print(f"Found code {d.upper()}")
             self.available_translations.append(d)
 
     def read_docs(self, path):
@@ -261,8 +261,6 @@ class Gendoc:
                 elif line.strip() == '"""' and just_read_id:
                     just_read_id = False
                 elif line.strip() == '"""' and not just_read_id:
-                    if self.verbose:
-                        print(f"Linked ID {buffer_name}.")
                     file_doc[buffer_name] = buffer
                     buffer_name, buffer = None, []
                 else:
@@ -273,6 +271,9 @@ class Gendoc:
                                 f"'{path.split('/')[-1]}'")
 
             final = {**final, **file_doc}
+
+        if self.verbose:
+            print(f"Found {len(final)} translations")
 
         return final
 
