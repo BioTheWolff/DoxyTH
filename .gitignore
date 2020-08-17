@@ -128,11 +128,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# test files
-*.test.py
-working_dir/
-translations/
-.dthstems/
-
 # .idea dir
 .idea/

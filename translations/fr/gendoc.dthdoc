@@ -1,0 +1,70 @@
+@doc_id gendoc_init
+"""
+La fonction d'init
+
+Prends le dossier des traductions comme paramètre et le passe par argparse.
+"""
+
+@doc_id gendoc_flow
+"""
+La flow function.
+
+Permet de répartir aisément le travail entre différentes fonctions plus petites.
+"""
+
+@doc_id setup_doxygen
+"""
+Mets en place les fichiers concernant doxygen.
+
+Les fichiers sont: la config doxygen (.dthdoxy), le batch (.dthb.bat) et le JSON dump de la liste de toutes les
+traductions (.dtht).
+
+Args:
+    translations_dir: Le dossier des traductions
+"""
+
+@doc_id gendoc_cleanup
+"""
+La dernière fonction appelée par la classe.
+
+"Nettoie" en supprimant les trois fichiers temporaires créés par les fonctions flow et setup_doxygen_files.
+"""
+
+@doc_id adapt_to_lang
+"""
+Adapte les fichiers de configuration à la langue actuelle.
+
+Change l'output HTML de doxygen, et le paramètre de langue du batch pour dire à doxyth quelle langue il doit prendre
+pour référence.
+
+Args:
+    lang: La langue actuelle.
+"""
+
+@doc_id write_translations
+"""
+Écrit un dump JSON de toutes les documentations des différentes langues collectées dans le .dtht
+"""
+
+@doc_id analyze_translations_dir
+"""
+Lis le dossier des traductions et cherche les codes de langue.
+
+Cette fonction regarde tous les sous-dossiers pour voir si ils correspondent à un code ISO 639-1 (à deux lettres)
+valide. Si le sous-dossier remplit ces conditions, on enregistre le code de la langue et retourne la liste des codes une
+fois fini.
+
+Args:
+    path: Le chemin du dossier des traductions
+"""
+
+@doc_id read_doc_files
+"""
+Lis les fichiers contenant la documentation et enregistre chaque documentation.
+
+Cette fonction lis les fichiers de documentation dans le dossier de la langue qu'on lui a donnée, et enregistre toutes
+les références de documentation valides, puis les retourne toutes une fois la "fouille" finie.
+
+Args:
+    path: Le dossier de la langue dont on veut extraire les documentations traduites.
+"""
