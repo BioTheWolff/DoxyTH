@@ -133,3 +133,4 @@ dmypy.json
 
 # stems
 stems/
+doxyth/version.py

@@ -4,8 +4,6 @@ import os
 from os.path import isfile, join, isdir, abspath
 from .utils import is_valid_lang_dir
 
-available_translations = []
-
 
 def main():
     parser = argparse.ArgumentParser()
