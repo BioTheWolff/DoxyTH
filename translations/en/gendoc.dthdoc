@@ -44,8 +44,7 @@ Args:
 
 @doc_id write_config
 """
-Self-explanatory. Writes a JSON dump of all the collected language documentations in the config file,
-alongside the config options.
+Self-explanatory. Writes a JSON dump of all the collected language documentations in the config file, alongside the config options.
 """
 
 @doc_id analyze_translations_dir

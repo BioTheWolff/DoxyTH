@@ -16,6 +16,7 @@ doxygen_file_name = '.dthdoxy'
 class Gendoc:
     available_translations = None
     verbose = None
+    debug = None
     postprocess = None
     langs = None
 
@@ -29,12 +30,16 @@ class Gendoc:
         parser = argparse.ArgumentParser()
         parser.add_argument("translation_dir", help="Documentations to replace the 'doc_id's.")
         parser.add_argument("--verify", help="Makes the documentation files be verified instead", action='store_true')
-        parser.add_argument("-V", "--verbose", help="Activates the program verbose mode. Only available when not "
-                                                    "verifying the files", action='store_true')
+        parser.add_argument("-V", "--noverbose", help="De-activates the program verbose mode.", action='store_true')
         parser.add_argument("-D", "--doxyfile", help="The path to an already existing Doxyfile that DoxyTH will use as "
                                                      "a base")
         parser.add_argument("-P", "--postprocess", help="The process to run after using DoxyTH. This process"
                                                         "will return the file lines to Doxygen.")
+        parser.add_argument("--debug", help="Activates debug mode. Forces verbose and outputs all doxygen output to the"
+                                            "console.", action='store_true')
+        parser.add_argument("--nocleanup", help="Prevents DoxyTH to initiate cleanup. Useful if one wants to look at"
+                                                "the generated config files for debug.", action='store_true')
+        parser.add_argument("--skipgen", help="Skips Doxygen generation. Used for debug.", action='store_true')
 
         args = parser.parse_args()
 
@@ -57,7 +62,11 @@ class Gendoc:
             exit(0)
 
         else:
-            self.verbose = args.verbose
+            if args.debug:
+                self.verbose = True
+                self.debug = True
+            else:
+                self.verbose = False if args.noverbose else True
 
             # Check if postprocess is valid
             if args.postprocess and args.postprocess not in available_postprocesses:
@@ -90,26 +99,35 @@ class Gendoc:
 
             # Change Doxyfile and run doxygen for it to directly analyse files modified by the script using
             # FILE_PATTERNS
-            for lang in self.available_translations:
-                if self.verbose:
-                    print(f"Generating doc for {lang.upper()}... ", end="")
-                self.adapt_configs_to_lang(lang)
+            if args.skipgen:
+                print("Skipping Doxygen generation.")
+            else:
+                for lang in self.available_translations:
+                    if self.verbose:
+                        print(f"Generating doc for {lang.upper()}... ", end="")
+                    self.adapt_configs_to_lang(lang)
 
-                # Creating the language directory if not existant
-                if not exists(abspath(f'{self.docs_output_path}/{lang}')):
-                    os.mkdir(f'{self.docs_output_path}/{lang}')
+                    # Creating the language directory if not existant
+                    if not exists(abspath(f'{self.docs_output_path}/{lang}')):
+                        os.mkdir(f'{self.docs_output_path}/{lang}')
 
-                fnull = open(os.devnull, 'w')
-                code = subprocess.call(['doxygen', doxygen_file_name], stdout=fnull, stderr=subprocess.STDOUT)
-                fnull.close()
-
-                if self.verbose:
-                    if code:
-                        print('ERROR')
+                    fnull = open(os.devnull, 'w')
+                    if self.debug:
+                        code = subprocess.call(['doxygen', doxygen_file_name])
                     else:
-                        print("OK")
+                        code = subprocess.call(['doxygen', doxygen_file_name], stderr=subprocess.STDOUT, stdout=fnull)
+                    fnull.close()
 
-            self.cleanup()
+                    if self.verbose:
+                        if code:
+                            print('ERROR')
+                        else:
+                            print("OK")
+
+            if not args.nocleanup:
+                self.cleanup()
+            else:
+                print("Skipping cleanup.")
 
     def setup_doxygen_files(self, translations_dir: str, doxyfile_path):
         """
@@ -141,8 +159,12 @@ class Gendoc:
             else:
                 if self.verbose:
                     print("Could not find a Doxyfile. Generating a new one.")
+
                 fnull = open(os.devnull, 'w')
-                subprocess.call(['doxygen', '-s', '-g', doxygen_file_name], stdout=fnull, stderr=subprocess.STDOUT)
+                if self.debug:
+                    subprocess.call(['doxygen', '-s', '-g', doxygen_file_name])
+                else:
+                    subprocess.call(['doxygen', '-s', '-g', doxygen_file_name], stderr=subprocess.STDOUT, stdout=fnull)
                 fnull.close()
 
         if self.verbose:
@@ -154,8 +176,11 @@ class Gendoc:
         for n, line in enumerate(lines):
             # Sets it to exclude already existing docs
             if re.match(r"^EXCLUDE\s*=", line.strip()):
-                lines[n:n+1] = f"EXCLUDE = docs/\n" \
-                               f"          {translations_dir}\n"
+                existing = re.split(r"^EXCLUDE\s*=\s*", line.strip())[-1]
+                if existing:
+                    lines[n:n + 1] = f"EXCLUDE = {existing} \\ {self.docs_output_path}/ \\ {translations_dir}\n"
+                else:
+                    lines[n:n + 1] = f"EXCLUDE = {self.docs_output_path}/ \\ {translations_dir}\n"
 
             # Sets recursion ON
             if re.match(r"^RECURSIVE\s*=", line.strip()):
@@ -234,8 +259,9 @@ class Gendoc:
         Self-explanatory. Writes a JSON dump of all the collected language documentations in the .dtht file,
         alongside the config options.
         """
+
         options = {"postprocess": self.postprocess}
-        final = {"docs": self.langs, **options}
+        final = {**options, "docs": self.langs}
         with open(config_file_name, 'w', encoding='utf-8') as f:
             f.write(json.dumps(final))
 
@@ -308,6 +334,26 @@ class Gendoc:
 
         if self.verbose:
             print(f"Found {len(final)} translations")
+
+        # We now edit all the docs to take out every empty line at the start AND end of the doclines
+        for el in final.keys():
+            docs = final[el]
+            start = None
+            end = None
+
+            for i in range(len(docs)):
+                if not docs[i].strip():
+                    continue
+                start = i
+                break
+
+            for i in range(len(docs)):
+                if not docs[len(docs) - 1 - i].strip():
+                    continue
+                end = len(docs) - i
+                break
+
+            final[el] = docs[start:end]
 
         return final
 

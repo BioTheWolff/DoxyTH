@@ -82,13 +82,13 @@ class DoxyTH:
 
         for el in to_change:
             if el['id'] in self.docs:
-                s, e = el['lines']
+                dls, dle = el['lines']
 
                 modified_doc = [el['offset'] + line for line in self.docs[el['id']]]
                 modified_doc.insert(0, el['offset'] + '"""')
                 modified_doc.append(el['offset'] + '"""')
 
-                final[s:e+1] = modified_doc
+                final[dls:dle+1] = modified_doc
 
         return final
 
