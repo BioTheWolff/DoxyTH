@@ -2,7 +2,7 @@ import argparse
 import re
 import os
 from os.path import isfile, join, isdir, abspath
-from .utils import is_valid_lang_dir
+from .utils.utils import is_valid_lang_dir
 
 
 def main():

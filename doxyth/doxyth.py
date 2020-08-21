@@ -5,28 +5,34 @@ class DoxyTH:
 
         parser = argparse.ArgumentParser()
         parser.add_argument("lang", help="The language to translate the doc to")
-        parser.add_argument("file", help="The file to replace the docs into")
+        parser.add_argument("filename", help="The file to replace the docs into")
         args = parser.parse_args()
 
         self.__flow(args)
 
     def __flow(self, args):
-        self.docs = self.__fetch_docs(args.lang)
-        self.lines = self.__fetch_file_lines(args.file)
+        from .utils.postprocess import postprocess_dispatcher
+
+        self.config = self.__fetch_docs()
+        self.docs = self.config['docs'][args.lang]
+        self.lines = self.__fetch_file_lines(args.filename)
 
         lines = self.__modify_lines()
 
-        for line in lines:
-            print(line.rstrip())
+        if self.config['postprocess']:
+            postprocess_dispatcher(self.config['postprocess'], args.filename, lines)
+        else:
+            for line in lines:
+                print(line.rstrip())
 
     @staticmethod
-    def __fetch_docs(lang):
+    def __fetch_docs():
         import json
+        from doxyth.gendoc import config_file_name
 
-        with open(".dtht", encoding='utf-8') as f:
+        with open(config_file_name, encoding='utf-8') as f:
             buf = f.read()
-        docs = json.loads(buf)
-        return docs[lang]
+        return json.loads(buf)
 
     @staticmethod
     def __fetch_file_lines(path):

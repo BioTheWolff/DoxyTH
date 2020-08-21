@@ -6,13 +6,19 @@ import json
 import shutil
 from os.path import isfile, join, exists, abspath
 from .verify import verify_full_directory
-from .utils import is_valid_lang_dir
+from .utils.utils import is_valid_lang_dir
+from .utils.postprocess import available_postprocesses
+
+config_file_name = '.dthconf'
+doxygen_file_name = '.dthdoxy'
 
 
 class Gendoc:
     available_translations = None
     verbose = None
+    postprocess = None
     langs = None
+
     docs_output_path = 'docs'
 
     def __init__(self):
@@ -27,6 +33,8 @@ class Gendoc:
                                                     "verifying the files", action='store_true')
         parser.add_argument("-D", "--doxyfile", help="The path to an already existing Doxyfile that DoxyTH will use as "
                                                      "a base")
+        parser.add_argument("-P", "--postprocess", help="The process to run after using DoxyTH. This process"
+                                                        "will return the file lines to Doxygen.")
 
         args = parser.parse_args()
 
@@ -50,6 +58,14 @@ class Gendoc:
 
         else:
             self.verbose = args.verbose
+
+            # Check if postprocess is valid
+            if args.postprocess and args.postprocess not in available_postprocesses:
+                raise Exception(f"Postprocess {args.postprocess} not recognised. Available postprocesses: "
+                                f"{' / '.join(available_postprocesses)}")
+
+            self.postprocess = args.postprocess
+
             self.analyze_translations_dir(args.translation_dir)
 
             if not self.available_translations:
@@ -63,7 +79,7 @@ class Gendoc:
                 self.langs[lang] = self.read_docs(f"{args.translation_dir}/{lang}")
 
             # write translations into a json file so the doxyth executable can fetch translations quickly
-            self.write_translations_to_file()
+            self.write_config()
 
             # Edit or create doxygen config
             self.setup_doxygen_files(args.translation_dir, args.doxyfile)
@@ -84,7 +100,7 @@ class Gendoc:
                     os.mkdir(f'{self.docs_output_path}/{lang}')
 
                 fnull = open(os.devnull, 'w')
-                code = subprocess.call(['doxygen', '.dthdoxy'], stdout=fnull, stderr=subprocess.STDOUT)
+                code = subprocess.call(['doxygen', doxygen_file_name], stdout=fnull, stderr=subprocess.STDOUT)
                 fnull.close()
 
                 if self.verbose:
@@ -102,7 +118,7 @@ class Gendoc:
         Setups the doxygen-related files.
 
         The files are: the doxygen config file (named .dthdoxy), the batch file (.dthb.bat) and the list of all
-        the translations (inside .dtht)
+        the translations/config (inside .dtht)
 
         Args:
             translations_dir: The translations directory taken by argparse
@@ -116,23 +132,23 @@ class Gendoc:
         if doxyfile_path:
             if self.verbose:
                 print("Using the provided Doxygen configuration to build config.")
-            shutil.copy(doxyfile_path, ".dthdoxy")
+            shutil.copy(doxyfile_path, doxygen_file_name)
         else:
             if exists(abspath("Doxyfile")):
                 if self.verbose:
                     print("Defaulting to existing Doxyfile config.")
-                shutil.copy('Doxyfile', ".dthdoxy")
+                shutil.copy('Doxyfile', doxygen_file_name)
             else:
                 if self.verbose:
                     print("Could not find a Doxyfile. Generating a new one.")
                 fnull = open(os.devnull, 'w')
-                subprocess.call(['doxygen', '-s', '-g', '.dthdoxy'], stdout=fnull, stderr=subprocess.STDOUT)
+                subprocess.call(['doxygen', '-s', '-g', doxygen_file_name], stdout=fnull, stderr=subprocess.STDOUT)
                 fnull.close()
 
         if self.verbose:
             print("Modifying Doxygen config file... ", end="")
 
-        with open('.dthdoxy', encoding='utf-8') as f:
+        with open(doxygen_file_name, encoding='utf-8') as f:
             lines = f.readlines()
 
         for n, line in enumerate(lines):
@@ -157,7 +173,7 @@ class Gendoc:
             if re.match(r"^OPTIMIZE_OUTPUT_JAVA\s*=", line.strip()):
                 lines[n] = f"OPTIMIZE_OUTPUT_JAVA = YES\n"
 
-        with open('.dthdoxy', 'w', encoding='utf-8') as f:
+        with open(doxygen_file_name, 'w', encoding='utf-8') as f:
             f.writelines(lines)
 
         if self.verbose:
@@ -176,8 +192,8 @@ class Gendoc:
             print("Cleaning up... ", end="")
 
         os.remove(".dthb.bat")
-        os.remove(".dtht")
-        os.remove(".dthdoxy")
+        os.remove(config_file_name)
+        os.remove(doxygen_file_name)
 
         if self.verbose:
             print("OK")
@@ -196,7 +212,7 @@ class Gendoc:
         """
 
         # Doxyfile
-        with open('.dthdoxy', encoding='utf-8') as f:
+        with open(doxygen_file_name, encoding='utf-8') as f:
             lines = f.readlines()
 
         for n, line in enumerate(lines):
@@ -204,21 +220,24 @@ class Gendoc:
             if re.match(r"^HTML_OUTPUT\s*=", line.strip()):
                 lines[n] = f"HTML_OUTPUT = {self.docs_output_path}/{lang}/\n"
 
-        with open('.dthdoxy', 'w', encoding='utf-8') as f:
+        with open(doxygen_file_name, 'w', encoding='utf-8') as f:
             f.writelines(lines)
 
         # batch file
         with open('.dthb.bat', 'w', encoding='utf-8') as b:
             b.write(f"python -m doxyth.doxyth {lang} %1")
 
-    def write_translations_to_file(self):
+    def write_config(self):
         """
-        ### @doc_id write_translations
+        ### @doc_id write_config
 
-        Self-explanatory. Writes a JSON dump of all the collected language documentations in the .dtht file
+        Self-explanatory. Writes a JSON dump of all the collected language documentations in the .dtht file,
+        alongside the config options.
         """
-        with open(".dtht", 'w', encoding='utf-8') as f:
-            f.write(json.dumps(self.langs))
+        options = {"postprocess": self.postprocess}
+        final = {"docs": self.langs, **options}
+        with open(config_file_name, 'w', encoding='utf-8') as f:
+            f.write(json.dumps(final))
 
     def analyze_translations_dir(self, path):
         """

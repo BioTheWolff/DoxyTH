@@ -42,9 +42,10 @@ Args:
     lang: La langue actuelle.
 """
 
-@doc_id write_translations
+@doc_id write_config
 """
-Écrit un dump JSON de toutes les documentations des différentes langues collectées dans le .dtht
+Écrit un dump JSON de toutes les documentations des différentes langues collectées dans le fichier de config, avec
+les options de configuration pour ce lancement de DoxyTH.
 """
 
 @doc_id analyze_translations_dir
