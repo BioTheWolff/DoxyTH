@@ -8,6 +8,7 @@ from os.path import isfile, join, exists, abspath
 from .verify import verify_full_directory
 from .utils.utils import is_valid_lang_dir
 from .utils.postprocess import available_postprocesses
+from .utils.html_builder import PrepareTemplates, HTMLBuilder
 
 config_file_name = '.dthconf'
 doxygen_file_name = '.dthdoxy'
@@ -93,7 +94,7 @@ class Gendoc:
             # Edit or create doxygen config
             self.setup_doxygen_files(args.translation_dir, args.doxyfile)
 
-            # Create the main directory if not existant
+            # Create the main directory if not existing
             if not exists(abspath(self.docs_output_path)):
                 os.mkdir(self.docs_output_path)
 
@@ -107,7 +108,7 @@ class Gendoc:
                         print(f"Generating doc for {lang.upper()}... ", end="")
                     self.adapt_configs_to_lang(lang)
 
-                    # Creating the language directory if not existant
+                    # Creating the language directory if not existing
                     if not exists(abspath(f'{self.docs_output_path}/{lang}')):
                         os.mkdir(f'{self.docs_output_path}/{lang}')
 
@@ -124,10 +125,46 @@ class Gendoc:
                         else:
                             print("OK")
 
+            # now creating the language selection file into the output directory
+            if self.verbose:
+                print("Creating language selection file")
+
+            try:
+                from .version import version as doxythversion
+            except (ImportError, ModuleNotFoundError):
+                pass
+
+            replacements = {
+                "doxythversion": doxythversion if doxythversion else '<unknown version>',
+                **self.retrieve_replacements_from_doxyfile()
+            }
+
+            template, snippet = PrepareTemplates(abspath(__file__))()
+            HTMLBuilder(self.docs_output_path, self.available_translations, replacements, template, snippet)
+
             if not args.nocleanup:
                 self.cleanup()
             else:
                 print("Skipping cleanup.")
+
+    @staticmethod
+    def retrieve_replacements_from_doxyfile():
+        final = {}
+
+        with open(doxygen_file_name, encoding='utf-8') as f:
+            buf = f.readlines()
+
+        for line in buf:
+            if re.match(r"^PROJECT_NAME\s*=\s*", line.strip()):
+                final['projectname'] = re.split(r'^PROJECT_NAME\s*=\s*["\'](.+)["\']', line.strip())[-2]
+
+            if re.match(r"^PROJECT_NUMBER\s*=\s*", line.strip()):
+                final['projectnumber'] = re.split(r"^PROJECT_NUMBER\s*=\s*", line.strip())[-1]
+
+            if re.match(r"^PROJECT_BRIEF\s*=\s*", line.strip()):
+                final['projectbrief'] = re.split(r'^PROJECT_BRIEF\s*=\s*["\'](.+)["\']', line.strip())[-2]
+
+        return final
 
     def setup_doxygen_files(self, translations_dir: str, doxyfile_path):
         """
@@ -216,7 +253,10 @@ class Gendoc:
         if self.verbose:
             print("Cleaning up... ", end="")
 
-        os.remove(".dthb.bat")
+        try:
+            os.remove(".dthb.bat")
+        except FileNotFoundError:
+            pass
         os.remove(config_file_name)
         os.remove(doxygen_file_name)
 
