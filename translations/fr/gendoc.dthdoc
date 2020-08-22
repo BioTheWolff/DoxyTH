@@ -1,11 +1,11 @@
-@doc_id gendoc_init
+@doc_id init
 """
 La fonction d'init
 
 Prends le dossier des traductions comme paramètre et le passe par argparse.
 """
 
-@doc_id gendoc_flow
+@doc_id flow
 """
 La flow function.
 
@@ -24,7 +24,7 @@ Args:
     doxyfile_path: Le chemin d'un fichier de config Doxygen déjà existant
 """
 
-@doc_id gendoc_cleanup
+@doc_id cleanup
 """
 La dernière fonction appelée par la classe.
 

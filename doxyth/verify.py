@@ -51,6 +51,9 @@ def verify_file(path, lone_file=True, no_print=False):
         elif line.strip() == '"""' and just_read_id:
             just_read_id = False
         elif line.strip() == '"""' and not just_read_id:
+            if buffer_name in final.keys():
+                print(f"ID {buffer_name} found multiple times in the same file.")
+                exit()
             final[buffer_name] = buffer
             buffer_name, buffer = None, []
         else:
@@ -76,6 +79,12 @@ def verify_lang_directory(path, no_print=False):
     for file in [f for f in os.listdir(path) if isfile(join(path, f))]:
         if file.endswith(".dthdoc"):
             res = verify_file(f"{path}/{file}", False, no_print)
+
+            for new in res:
+                if new in final:
+                    print(f"ID {new} found multiple times for the same language.")
+                    exit()
+
             final.extend(res)
     return final
 

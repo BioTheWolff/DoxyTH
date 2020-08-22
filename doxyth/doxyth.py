@@ -28,9 +28,9 @@ class DoxyTH:
     @staticmethod
     def __fetch_docs():
         import json
-        from doxyth.gendoc import config_file_name
+        from doxyth.gendoc import generated_data_file_name
 
-        with open(config_file_name, encoding='utf-8') as f:
+        with open(generated_data_file_name, encoding='utf-8') as f:
             buf = f.read()
         return json.loads(buf)
 

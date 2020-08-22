@@ -1,11 +1,11 @@
-@doc_id gendoc_init
+@doc_id init
 """
 The init function
 
 Takes the translation directory as a parameter and processes it through argparse.
 """
 
-@doc_id gendoc_flow
+@doc_id flow
 """
 This is the main flow function of the class.
 
@@ -24,7 +24,7 @@ Args:
     doxyfile_path: The path to an already-existing Doxygen configuration
 """
 
-@doc_id gendoc_cleanup
+@doc_id cleanup
 """
 This is the last function to be called by the class.
 
@@ -67,4 +67,5 @@ references for further use during the replacing phase by the doxyth file.
 
 Args:
     path: The language directory path to read through.
+    nofileprefix: Whether to deactivate the file prefix or not
 """

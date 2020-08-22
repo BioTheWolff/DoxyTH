@@ -10,7 +10,7 @@ from .utils.utils import is_valid_lang_dir
 from .utils.postprocess import available_postprocesses
 from .utils.html_builder import PrepareTemplates, HTMLBuilder
 
-config_file_name = '.dthconf'
+generated_data_file_name = '.dthdata'
 doxygen_file_name = '.dthdoxy'
 
 
@@ -25,17 +25,23 @@ class Gendoc:
 
     def __init__(self):
         """
-        ### @doc_id gendoc_init
+        ### @doc_id gendoc:init
         """
 
         parser = argparse.ArgumentParser()
         parser.add_argument("translation_dir", help="Documentations to replace the 'doc_id's.")
+        # Verification of the translations files instead
         parser.add_argument("--verify", help="Makes the documentation files be verified instead", action='store_true')
+        # General options
         parser.add_argument("-V", "--noverbose", help="De-activates the program verbose mode.", action='store_true')
+        parser.add_argument("-F", "--nofileprefix", help="De-activates the file prefix in front of the doc_id.",
+                            action='store_true')
+        # Config options
         parser.add_argument("-D", "--doxyfile", help="The path to an already existing Doxyfile that DoxyTH will use as "
                                                      "a base")
         parser.add_argument("-P", "--postprocess", help="The process to run after using DoxyTH. This process"
                                                         "will return the file lines to Doxygen.")
+        # Debug options
         parser.add_argument("--debug", help="Activates debug mode. Forces verbose and outputs all doxygen output to the"
                                             "console.", action='store_true')
         parser.add_argument("--nocleanup", help="Prevents DoxyTH to initiate cleanup. Useful if one wants to look at"
@@ -48,7 +54,7 @@ class Gendoc:
 
     def flow(self, args):
         """
-        ### @doc_id gendoc_flow
+        ### @doc_id gendoc:flow
 
         This is the main flow function of the class.
 
@@ -86,7 +92,7 @@ class Gendoc:
             for lang in self.available_translations:
                 if self.verbose:
                     print(f"{lang.upper()}: Reading docs... ", end="")
-                self.langs[lang] = self.read_docs(f"{args.translation_dir}/{lang}")
+                self.langs[lang] = self.read_docs(f"{args.translation_dir}/{lang}", args.nofileprefix)
 
             # write translations into a json file so the doxyth executable can fetch translations quickly
             self.write_config()
@@ -132,10 +138,10 @@ class Gendoc:
             try:
                 from .version import version as doxythversion
             except (ImportError, ModuleNotFoundError):
-                pass
+                doxythversion = '<unknown version>'
 
             replacements = {
-                "doxythversion": doxythversion if doxythversion else '<unknown version>',
+                "doxythversion": doxythversion,
                 **self.retrieve_replacements_from_doxyfile()
             }
 
@@ -168,7 +174,7 @@ class Gendoc:
 
     def setup_doxygen_files(self, translations_dir: str, doxyfile_path):
         """
-        ### @doc_id setup_doxygen
+        ### @doc_id gendoc:setup_doxygen
 
         Setups the doxygen-related files.
 
@@ -243,7 +249,7 @@ class Gendoc:
 
     def cleanup(self):
         """
-        ### @doc_id gendoc_cleanup
+        ### @doc_id gendoc:cleanup
 
         This is the last function to be called by the class.
 
@@ -257,7 +263,7 @@ class Gendoc:
             os.remove(".dthb.bat")
         except FileNotFoundError:
             pass
-        os.remove(config_file_name)
+        os.remove(generated_data_file_name)
         os.remove(doxygen_file_name)
 
         if self.verbose:
@@ -265,7 +271,7 @@ class Gendoc:
 
     def adapt_configs_to_lang(self, lang):
         """
-        ### @doc_id adapt_to_lang
+        ### @doc_id gendoc:adapt_to_lang
 
         Adapts the configuration files to the current language being processed.
 
@@ -294,7 +300,7 @@ class Gendoc:
 
     def write_config(self):
         """
-        ### @doc_id write_config
+        ### @doc_id gendoc:write_config
 
         Self-explanatory. Writes a JSON dump of all the collected language documentations in the .dtht file,
         alongside the config options.
@@ -302,12 +308,12 @@ class Gendoc:
 
         options = {"postprocess": self.postprocess}
         final = {**options, "docs": self.langs}
-        with open(config_file_name, 'w', encoding='utf-8') as f:
+        with open(generated_data_file_name, 'w', encoding='utf-8') as f:
             f.write(json.dumps(final))
 
     def analyze_translations_dir(self, path):
         """
-        ### @doc_id analyze_translations_dir
+        ### @doc_id gendoc:analyze_translations_dir
 
         Reads through the translations directory to look for language codes.
 
@@ -329,9 +335,9 @@ class Gendoc:
                 print(f"Found code {d.upper()}")
             self.available_translations.append(d)
 
-    def read_docs(self, path):
+    def read_docs(self, path, nofileprefix):
         """
-        ### @doc_id read_doc_files
+        ### @doc_id gendoc:read_doc_files
 
         Reads the documentation files and stores each documentation text.
 
@@ -340,12 +346,15 @@ class Gendoc:
 
         Args:
             path: The language directory path to read through.
+            nofileprefix: Whether to deactivate the file prefix or not
         """
 
         files = [f for f in os.listdir(path) if isfile(join(path, f)) and f.endswith(".dthdoc")]
         final = {}
 
         for file in files:
+            filename = ".".join(file.split(".")[0:-1])
+
             with open(f"{path}/{file}", encoding='utf-8') as f:
                 lines = f.readlines()
 
@@ -361,7 +370,13 @@ class Gendoc:
                 elif line.strip() == '"""' and just_read_id:
                     just_read_id = False
                 elif line.strip() == '"""' and not just_read_id:
-                    file_doc[buffer_name] = buffer
+                    if buffer_name in final.keys():
+                        raise Exception(f"ID {buffer_name} found multiple times in the same file.")
+
+                    if nofileprefix:
+                        file_doc[buffer_name] = buffer
+                    else:
+                        file_doc[f'{filename}:{buffer_name}'] = buffer
                     buffer_name, buffer = None, []
                 else:
                     buffer.append(line.rstrip() + '\n')
@@ -369,6 +384,10 @@ class Gendoc:
             if buffer or buffer_name:
                 raise Exception(f"Warning: Unexpected EOF while reading ID {buffer_name} in file "
                                 f"'{path.split('/')[-1]}'")
+
+            for doc_id in file_doc.keys():
+                if doc_id in final.keys():
+                    raise Exception(f"ID {doc_id} found multiple times for the same language.")
 
             final = {**final, **file_doc}
 
