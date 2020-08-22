@@ -1,0 +1,62 @@
+@doc_id class
+"""
+Class that is made to be called by doxygen as a file pattern processor.
+
+This file (and class) is automatically called by Doxygen for it to process any file Doxygen encounters that follows
+the rule defined in the FILE_PATTERNS option of the config.
+By default, DoxyTH sets the FILE_PATTERNS value of the Doxygen config to "*py=.dthb", ".dthb" being the batch file
+called by Doxygen when it encounters any file ending by ".py".
+
+The batch file has "python -m doxyth.doxyth <lang> %1" as content. LANG is automatically changed by the gendoc class
+each time we change language. Doxygen then passes the file path, which is taken by the DoxyTH class as an input.
+
+The file is methodically read, and every doc_id matching the default regex pattern is registered, and then the whole
+doclines where the doc_id has been found are replaced by the linked documentation for this language.
+
+The file is then printed line per line for Doxygen to read it back and process it. If a postprocessing has been
+set upon running Gendoc, the file lines are instead sent to the postprocess (doxypy, doxypypy, etc.) which will
+take care of printing the line itself, after doing its job.
+"""
+
+@doc_id flow
+"""
+The flow function
+
+We fetch the doc lines for this language, and then all the file lines.
+We call the lines modifier function and then either print the lines or send them to the postprocess bridge.
+
+Args:
+    args: The argparse arguments
+"""
+
+@doc_id fetch_data_file
+"""
+Simply fetches the generated data file and reads its content.
+
+Returns:
+    The content of the data file
+"""
+
+@doc_id fetch_file_lines
+"""
+Simply reads the file and returns its lines.
+
+Args:
+    path: The file path
+
+Returns:
+    The file lines
+"""
+
+@doc_id modify_lines
+"""
+The main function of this class. Processes the file lines to replace the doc_ids.
+
+The function reads the file line per line, and only looks for a doc_id in doclines. If multiple IDs are found in
+one doc, only the first is kept as an ID.
+Once the file is entirely read, each doclines containing a doc ID are replaced by the matching doclines
+registered in the translations file(s) of this language.
+
+Returns:
+    The modified file lines
+"""

@@ -4,6 +4,7 @@ import os
 import subprocess
 import json
 import shutil
+from sys import stdout
 from os.path import isfile, join, exists, abspath
 from .verify import verify_full_directory
 from .utils.utils import is_valid_lang_dir
@@ -13,11 +14,36 @@ from .utils.html_builder import PrepareTemplates, HTMLBuilder
 generated_data_file_name = '.dthdata'
 doxygen_file_name = '.dthdoxy'
 
+## @package gendoc
+#
+# The package that hosts the main class of the program, which generates the whole Doxygen documentations.
+
 
 class Gendoc:
+    """
+    ### @doc_id gendoc:class
+
+    The main class of the module.
+
+    Allows the generation of multiple Doxygen documentations, one for each language recognised by the ISO 639-1.
+    Can be run either by running this package or the module itself.
+
+    You need to input a path to a "translations directory". The structure must be:
+    one subdirectory for each language, named by said language code, following the ISO 639-1 naming convention.
+    In each subdirectory, all files you want to be read by DoxyTH must end by ".dthdoc" (DoxyTH Documentation file).
+    For more details about the .dthdoc files structure, see DoxyTH class documentation.
+
+    The output is as follows:
+    A main page (index.html) for the language selection.
+    For each language: a subdirectory named with the language code (following the ISO 639-1) of said language.
+    The subdirectories all contain a Doxygen generation, with the in-file doclines replaced by DoxyTH following the
+    translations rules defined in all the .dthdoc files.
+    """
+
     available_translations = None
     verbose = None
     debug = None
+    doxymute = None
     postprocess = None
     langs = None
 
@@ -41,9 +67,12 @@ class Gendoc:
                                                      "a base")
         parser.add_argument("-P", "--postprocess", help="The process to run after using DoxyTH. This process"
                                                         "will return the file lines to Doxygen.")
+        # Doxygen print output options
+        doxy_print_group = parser.add_mutually_exclusive_group()
+        doxy_print_group.add_argument("--debug", help="Forces verbose and outputs all doxygen output to the console.",
+                                      action='store_true')
+        doxy_print_group.add_argument("--mute", help="Mutes Doxygen output.", action='store_true')
         # Debug options
-        parser.add_argument("--debug", help="Activates debug mode. Forces verbose and outputs all doxygen output to the"
-                                            "console.", action='store_true')
         parser.add_argument("--nocleanup", help="Prevents DoxyTH to initiate cleanup. Useful if one wants to look at"
                                                 "the generated config files for debug.", action='store_true')
         parser.add_argument("--skipgen", help="Skips Doxygen generation. Used for debug.", action='store_true')
@@ -74,6 +103,8 @@ class Gendoc:
                 self.debug = True
             else:
                 self.verbose = False if args.noverbose else True
+
+            self.doxymute = args.noverbose or args.mute
 
             # Check if postprocess is valid
             if args.postprocess and args.postprocess not in available_postprocesses:
@@ -121,8 +152,10 @@ class Gendoc:
                     fnull = open(os.devnull, 'w')
                     if self.debug:
                         code = subprocess.call(['doxygen', doxygen_file_name])
+                    elif self.doxymute:
+                        code = subprocess.call(['doxygen', doxygen_file_name], stderr=fnull, stdout=fnull)
                     else:
-                        code = subprocess.call(['doxygen', doxygen_file_name], stderr=subprocess.STDOUT, stdout=fnull)
+                        code = subprocess.call(['doxygen', doxygen_file_name], stderr=stdout, stdout=fnull)
                     fnull.close()
 
                     if self.verbose:
@@ -206,8 +239,10 @@ class Gendoc:
                 fnull = open(os.devnull, 'w')
                 if self.debug:
                     subprocess.call(['doxygen', '-s', '-g', doxygen_file_name])
+                elif self.doxymute:
+                    subprocess.call(['doxygen', '-s', '-g', doxygen_file_name], stderr=fnull, stdout=fnull)
                 else:
-                    subprocess.call(['doxygen', '-s', '-g', doxygen_file_name], stderr=subprocess.STDOUT, stdout=fnull)
+                    subprocess.call(['doxygen', '-s', '-g', doxygen_file_name], stderr=stdout, stdout=fnull)
                 fnull.close()
 
         if self.verbose:
