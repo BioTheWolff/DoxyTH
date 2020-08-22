@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['gendoc_18',['Gendoc',['../classdoxyth_1_1gendoc_1_1_gendoc.html',1,'doxyth::gendoc']]]
+  ['htmlbuilder_17',['HTMLBuilder',['../classdoxyth_1_1utils_1_1html__builder_1_1_h_t_m_l_builder.html',1,'doxyth::utils::html_builder']]]
 ];
