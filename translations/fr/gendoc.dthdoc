@@ -1,18 +1,18 @@
-@doc_id init
+&doc_id init
 """
 La fonction d'init
 
 Prends le dossier des traductions comme paramètre et le passe par argparse.
 """
 
-@doc_id flow
+&doc_id flow
 """
 La flow function.
 
 Permet de répartir aisément le travail entre différentes fonctions plus petites.
 """
 
-@doc_id setup_doxygen
+&doc_id setup_doxygen
 """
 Mets en place les fichiers concernant doxygen.
 
@@ -24,14 +24,14 @@ Args:
     doxyfile_path: Le chemin d'un fichier de config Doxygen déjà existant
 """
 
-@doc_id cleanup
+&doc_id cleanup
 """
 La dernière fonction appelée par la classe.
 
 "Nettoie" en supprimant les trois fichiers temporaires créés par les fonctions flow et setup_doxygen_files.
 """
 
-@doc_id adapt_to_lang
+&doc_id adapt_to_lang
 """
 Adapte les fichiers de configuration à la langue actuelle.
 
@@ -42,14 +42,14 @@ Args:
     lang: La langue actuelle.
 """
 
-@doc_id write_config
+&doc_id write_config
 """
 Écrit un dump JSON de toutes les documentations des différentes langues collectées dans le fichier de config.
 
 Inclut les options de configuration pour ce lancement de DoxyTH.
 """
 
-@doc_id analyze_translations_dir
+&doc_id analyze_translations_dir
 """
 Lis le dossier des traductions et cherche les codes de langue.
 
@@ -61,7 +61,7 @@ Args:
     path: Le chemin du dossier des traductions
 """
 
-@doc_id read_doc_files
+&doc_id read_doc_files
 """
 Lis les fichiers contenant la documentation et enregistre chaque documentation.
 

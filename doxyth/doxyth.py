@@ -6,7 +6,7 @@
 
 class DoxyTH:
     """
-    ### @doc_id doxyth:class
+    ### &doc_id doxyth:class
 
     Class that is made to be called by doxygen as a file pattern processor.
 
@@ -39,7 +39,7 @@ class DoxyTH:
 
     def __flow(self, args):
         """
-        ### @doc_id doxyth:flow
+        ### &doc_id doxyth:flow
 
         The flow function
 
@@ -69,7 +69,7 @@ class DoxyTH:
     @staticmethod
     def __fetch_data_file():
         """
-        ### @doc_id doxyth:fetch_data_file
+        ### &doc_id doxyth:fetch_data_file
 
         Simply fetches the generated data file and reads its content.
 
@@ -87,7 +87,7 @@ class DoxyTH:
     @staticmethod
     def __fetch_file_lines(path):
         """
-        ### @doc_id doxyth:fetch_file_lines
+        ### &doc_id doxyth:fetch_file_lines
 
         Simply reads the file and returns its lines.
 
@@ -104,7 +104,7 @@ class DoxyTH:
 
     def __modify_lines(self):
         """
-        ### @doc_id doxyth:modify_lines
+        ### &doc_id doxyth:modify_lines
 
         The main function of this class. Processes the file lines to replace the doc_ids.
 
@@ -149,9 +149,9 @@ class DoxyTH:
                 in_doc = False if in_doc else True
 
             if in_doc:
-                if re.match(r"\s*###\s*@doc_id\s*", line):
+                if re.match(r"\s*###\s*&doc_id\s*", line):
                     # Found, we now split by regex and register the doc id
-                    new = re.split(r"\s*###\s*@doc_id\s*", line.rstrip())[-1]
+                    new = re.split(r"\s*###\s*&doc_id\s*", line.rstrip())[-1]
                     if doc_id:
                         print(f"{self.filename}:{n}: warning: Found multiple IDs in the same doclines:"
                               f" 1st '{doc_id}'; 2nd '{new}'.", file=stderr)

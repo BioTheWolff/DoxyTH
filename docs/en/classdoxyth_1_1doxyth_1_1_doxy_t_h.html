@@ -77,6 +77,9 @@ $(function() {
 <div class="title">doxyth.doxyth.DoxyTH Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Class that is made to be called by doxygen as a file pattern processor.  
+ <a href="classdoxyth_1_1doxyth_1_1_doxy_t_h.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -102,35 +105,28 @@ Public Attributes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
 <tr class="memitem:a1a1b9237aacb04954b8757e0f5f93e1f"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdoxyth_1_1doxyth_1_1_doxy_t_h.html#a1a1b9237aacb04954b8757e0f5f93e1f">__flow</a> (self, args)</td></tr>
+<tr class="memdesc:a1a1b9237aacb04954b8757e0f5f93e1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The flow function.  <a href="classdoxyth_1_1doxyth_1_1_doxy_t_h.html#a1a1b9237aacb04954b8757e0f5f93e1f">More...</a><br /></td></tr>
 <tr class="separator:a1a1b9237aacb04954b8757e0f5f93e1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0e4f1199f9f83f4e163b4bd9c1a213c"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdoxyth_1_1doxyth_1_1_doxy_t_h.html#aa0e4f1199f9f83f4e163b4bd9c1a213c">__modify_lines</a> (self)</td></tr>
+<tr class="memdesc:aa0e4f1199f9f83f4e163b4bd9c1a213c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The main function of this class.  <a href="classdoxyth_1_1doxyth_1_1_doxy_t_h.html#aa0e4f1199f9f83f4e163b4bd9c1a213c">More...</a><br /></td></tr>
 <tr class="separator:aa0e4f1199f9f83f4e163b4bd9c1a213c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
 <tr class="memitem:adfc4395b6439bf8a94830d79314ea601"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdoxyth_1_1doxyth_1_1_doxy_t_h.html#adfc4395b6439bf8a94830d79314ea601">__fetch_data_file</a> ()</td></tr>
+<tr class="memdesc:adfc4395b6439bf8a94830d79314ea601"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simply fetches the generated data file and reads its content.  <a href="classdoxyth_1_1doxyth_1_1_doxy_t_h.html#adfc4395b6439bf8a94830d79314ea601">More...</a><br /></td></tr>
 <tr class="separator:adfc4395b6439bf8a94830d79314ea601"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c578a2287f5c12a88bba5bfdab12bda"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdoxyth_1_1doxyth_1_1_doxy_t_h.html#a2c578a2287f5c12a88bba5bfdab12bda">__fetch_file_lines</a> (path)</td></tr>
+<tr class="memdesc:a2c578a2287f5c12a88bba5bfdab12bda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simply reads the file and returns its lines.  <a href="classdoxyth_1_1doxyth_1_1_doxy_t_h.html#a2c578a2287f5c12a88bba5bfdab12bda">More...</a><br /></td></tr>
 <tr class="separator:a2c578a2287f5c12a88bba5bfdab12bda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><pre class="fragment">Class that is made to be called by doxygen as a file pattern processor.
-
-This file (and class) is automatically called by Doxygen for it to process any file Doxygen encounters that follows
-the rule defined in the FILE_PATTERNS option of the config.
-By default, DoxyTH sets the FILE_PATTERNS value of the Doxygen config to "*py=.dthb", ".dthb" being the batch file
-called by Doxygen when it encounters any file ending by ".py".
-
-The batch file has "python -m doxyth.doxyth &lt;lang&gt; %1" as content. LANG is automatically changed by the gendoc class
-each time we change language. Doxygen then passes the file path, which is taken by the DoxyTH class as an input.
-
-The file is methodically read, and every doc_id matching the default regex pattern is registered, and then the whole
-doclines where the doc_id has been found are replaced by the linked documentation for this language.
-
-The file is then printed line per line for Doxygen to read it back and process it. If a postprocessing has been
-set upon running Gendoc, the file lines are instead sent to the postprocess (doxypy, doxypypy, etc.) which will
-take care of printing the line itself, after doing its job.
-</pre> </div><h2 class="groupheader">Member Function Documentation</h2>
+<div class="textblock"><p>Class that is made to be called by doxygen as a file pattern processor. </p>
+<p>This file (and class) is automatically called by Doxygen for it to process any file Doxygen encounters that follows the rule defined in the FILE_PATTERNS option of the config. By default, <a class="el" href="classdoxyth_1_1doxyth_1_1_doxy_t_h.html" title="Class that is made to be called by doxygen as a file pattern processor.">DoxyTH</a> sets the FILE_PATTERNS value of the Doxygen config to "*py=.dthb", ".dthb" being the batch file called by Doxygen when it encounters any file ending by ".py".</p>
+<p>The batch file has "python -m doxyth.doxyth &lt;lang&gt; %1" as content. LANG is automatically changed by the Gendoc class each time we change language. Doxygen then passes the file path, which is taken by the <a class="el" href="classdoxyth_1_1doxyth_1_1_doxy_t_h.html" title="Class that is made to be called by doxygen as a file pattern processor.">DoxyTH</a> class as an input.</p>
+<p>The file is methodically read, and every doc_id matching the default regex pattern is registered, and then the whole doclines where the doc_id has been found are replaced by the linked documentation for this language.</p>
+<p>The file is then printed line per line for Doxygen to read it back and process it. If a postprocessing has been set upon running Gendoc, the file lines are instead sent to the postprocess (doxypy, doxypypy, etc.) which will take care of printing the line itself, after doing its job. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="adfc4395b6439bf8a94830d79314ea601"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adfc4395b6439bf8a94830d79314ea601">&#9670;&nbsp;</a></span>__fetch_data_file()</h2>
 
@@ -153,11 +149,10 @@ take care of printing the line itself, after doing its job.
   </tr>
 </table>
 </div><div class="memdoc">
-<pre class="fragment">Simply fetches the generated data file and reads its content.
 
-Returns:
-    The content of the data file
-</pre> 
+<p>Simply fetches the generated data file and reads its content. </p>
+<dl class="section return"><dt>Returns</dt><dd>The content of the data file </dd></dl>
+
 </div>
 </div>
 <a id="a2c578a2287f5c12a88bba5bfdab12bda"></a>
@@ -183,14 +178,16 @@ Returns:
   </tr>
 </table>
 </div><div class="memdoc">
-<pre class="fragment">Simply reads the file and returns its lines.
 
-Args:
-    path: The file path
+<p>Simply reads the file and returns its lines. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>The file path</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The file lines </dd></dl>
 
-Returns:
-    The file lines
-</pre> 
 </div>
 </div>
 <a id="a1a1b9237aacb04954b8757e0f5f93e1f"></a>
@@ -226,14 +223,17 @@ Returns:
   </tr>
 </table>
 </div><div class="memdoc">
-<pre class="fragment">The flow function
 
-We fetch the doc lines for this language, and then all the file lines.
-We call the lines modifier function and then either print the lines or send them to the postprocess bridge.
+<p>The flow function. </p>
+<pre class="fragment">   We fetch the doc lines for this language, and then all the file lines.
+   We call the lines modifier function and then either print the lines or send them to the postprocess bridge.
+</pre><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">args</td><td>The argparse arguments </td></tr>
+  </table>
+  </dd>
+</dl>
 
-Args:
-    args: The argparse arguments
-</pre> 
 </div>
 </div>
 <a id="aa0e4f1199f9f83f4e163b4bd9c1a213c"></a>
@@ -259,16 +259,14 @@ Args:
   </tr>
 </table>
 </div><div class="memdoc">
-<pre class="fragment">The main function of this class. Processes the file lines to replace the doc_ids.
 
-The function reads the file line per line, and only looks for a doc_id in doclines. If multiple IDs are found in
-one doc, only the first is kept as an ID.
-Once the file is entirely read, each doclines containing a doc ID are replaced by the matching doclines
-registered in the translations file(s) of this language.
+<p>The main function of this class. </p>
+<p>Processes the file lines to replace the doc_ids. </p><pre class="fragment">   The function reads the file line per line, and only looks for a doc_id in doclines. If multiple IDs are found in
+   one doc, only the first is kept as an ID.
+   Once the file is entirely read, each doclines containing a doc ID are replaced by the matching doclines
+   registered in the translations file(s) of this language.
+</pre><dl class="section return"><dt>Returns</dt><dd>The modified file lines </dd></dl>
 
-Returns:
-    The modified file lines
-</pre> 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>

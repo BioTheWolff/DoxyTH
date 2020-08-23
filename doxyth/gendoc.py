@@ -21,7 +21,7 @@ doxygen_file_name = '.dthdoxy'
 
 class Gendoc:
     """
-    ### @doc_id gendoc:class
+    ### &doc_id gendoc:class
 
     The main class of the module.
 
@@ -51,7 +51,7 @@ class Gendoc:
 
     def __init__(self):
         """
-        ### @doc_id gendoc:init
+        ### &doc_id gendoc:init
         """
 
         parser = argparse.ArgumentParser()
@@ -83,7 +83,7 @@ class Gendoc:
 
     def flow(self, args):
         """
-        ### @doc_id gendoc:flow
+        ### &doc_id gendoc:flow
 
         This is the main flow function of the class.
 
@@ -207,7 +207,7 @@ class Gendoc:
 
     def setup_doxygen_files(self, translations_dir: str, doxyfile_path):
         """
-        ### @doc_id gendoc:setup_doxygen
+        ### &doc_id gendoc:setup_doxygen
 
         Setups the doxygen-related files.
 
@@ -284,7 +284,7 @@ class Gendoc:
 
     def cleanup(self):
         """
-        ### @doc_id gendoc:cleanup
+        ### &doc_id gendoc:cleanup
 
         This is the last function to be called by the class.
 
@@ -306,7 +306,7 @@ class Gendoc:
 
     def adapt_configs_to_lang(self, lang):
         """
-        ### @doc_id gendoc:adapt_to_lang
+        ### &doc_id gendoc:adapt_to_lang
 
         Adapts the configuration files to the current language being processed.
 
@@ -335,7 +335,7 @@ class Gendoc:
 
     def write_config(self):
         """
-        ### @doc_id gendoc:write_config
+        ### &doc_id gendoc:write_config
 
         Self-explanatory. Writes a JSON dump of all the collected language documentations in the .dtht file,
         alongside the config options.
@@ -348,7 +348,7 @@ class Gendoc:
 
     def analyze_translations_dir(self, path):
         """
-        ### @doc_id gendoc:analyze_translations_dir
+        ### &doc_id gendoc:analyze_translations_dir
 
         Reads through the translations directory to look for language codes.
 
@@ -372,7 +372,7 @@ class Gendoc:
 
     def read_docs(self, path, nofileprefix):
         """
-        ### @doc_id gendoc:read_doc_files
+        ### &doc_id gendoc:read_doc_files
 
         Reads the documentation files and stores each documentation text.
 
@@ -398,8 +398,8 @@ class Gendoc:
             buffer = []
             just_read_id = False
             for line in lines:
-                if re.match(r"\s*@doc_id\s*", line.strip()):
-                    buffer_name = re.split(r"\s*@doc_id\s*", line.strip())[-1]
+                if re.match(r"\s*&doc_id\s*", line.strip()):
+                    buffer_name = re.split(r"\s*&doc_id\s*", line.strip())[-1]
                     just_read_id = True
                     continue
                 elif line.strip() == '"""' and just_read_id:

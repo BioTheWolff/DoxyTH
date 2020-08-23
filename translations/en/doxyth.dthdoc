@@ -1,4 +1,4 @@
-@doc_id class
+&doc_id class
 """
 Class that is made to be called by doxygen as a file pattern processor.
 
@@ -7,7 +7,7 @@ the rule defined in the FILE_PATTERNS option of the config.
 By default, DoxyTH sets the FILE_PATTERNS value of the Doxygen config to "*py=.dthb", ".dthb" being the batch file
 called by Doxygen when it encounters any file ending by ".py".
 
-The batch file has "python -m doxyth.doxyth <lang> %1" as content. LANG is automatically changed by the gendoc class
+The batch file has "python -m doxyth.doxyth <lang> %1" as content. LANG is automatically changed by the Gendoc class
 each time we change language. Doxygen then passes the file path, which is taken by the DoxyTH class as an input.
 
 The file is methodically read, and every doc_id matching the default regex pattern is registered, and then the whole
@@ -18,7 +18,7 @@ set upon running Gendoc, the file lines are instead sent to the postprocess (dox
 take care of printing the line itself, after doing its job.
 """
 
-@doc_id flow
+&doc_id flow
 """
 The flow function
 
@@ -29,7 +29,7 @@ Args:
     args: The argparse arguments
 """
 
-@doc_id fetch_data_file
+&doc_id fetch_data_file
 """
 Simply fetches the generated data file and reads its content.
 
@@ -37,7 +37,7 @@ Returns:
     The content of the data file
 """
 
-@doc_id fetch_file_lines
+&doc_id fetch_file_lines
 """
 Simply reads the file and returns its lines.
 
@@ -48,7 +48,7 @@ Returns:
     The file lines
 """
 
-@doc_id modify_lines
+&doc_id modify_lines
 """
 The main function of this class. Processes the file lines to replace the doc_ids.
 

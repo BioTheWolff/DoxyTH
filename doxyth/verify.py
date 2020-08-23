@@ -44,8 +44,8 @@ def verify_file(path, lone_file=True, no_print=False):
     buffer = []
     just_read_id = False
     for line in lines:
-        if re.match(r"\s*@doc_id\s*", line.strip()):
-            buffer_name = re.split(r"\s*@doc_id\s*", line.strip())[-1]
+        if re.match(r"\s*&doc_id\s*", line.strip()):
+            buffer_name = re.split(r"\s*&doc_id\s*", line.strip())[-1]
             just_read_id = True
             continue
         elif line.strip() == '"""' and just_read_id:
