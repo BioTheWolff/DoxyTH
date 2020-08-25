@@ -59,7 +59,8 @@ class Gendoc:
         # Verification of the translations files instead
         parser.add_argument("--verify", help="Makes the documentation files be verified instead", action='store_true')
         # General options
-        parser.add_argument("-V", "--noverbose", help="De-activates the program verbose mode.", action='store_true')
+        parser.add_argument("-V", "--version", help="Prints the version, then exits.", action="store_true")
+        parser.add_argument("--noverbose", help="De-activates the program verbose mode.", action='store_true')
         parser.add_argument("-F", "--nofileprefix", help="De-activates the file prefix in front of the doc_id.",
                             action='store_true')
         # Config options
@@ -67,6 +68,8 @@ class Gendoc:
                                                      "a base")
         parser.add_argument("-P", "--postprocess", help="The process to run after using DoxyTH. This process"
                                                         "will return the file lines to Doxygen.")
+        parser.add_argument("--listpostprocesses", help="List the available postprocesses, then exits.",
+                            action='store_true')
         # Doxygen print output options
         doxy_print_group = parser.add_mutually_exclusive_group()
         doxy_print_group.add_argument("--debug", help="Forces verbose and outputs all doxygen output to the console.",
@@ -92,6 +95,20 @@ class Gendoc:
 
         self.available_translations = []
         self.langs = {}
+
+        if args.version:
+            try:
+                from .version import version as doxythversion
+                doxythversion = 'v' + doxythversion
+            except (FileNotFoundError, ModuleNotFoundError):
+                doxythversion = '<unknown version>.' \
+                                '\nThe version file is missing, you should reinstall DoxyTH to fix this.'
+            print(f"DoxyTH {doxythversion}")
+            exit(0)
+
+        if args.listpostprocesses:
+            print(f"Available postprocess(es): {', '.join(available_postprocesses)}")
+            exit(0)
 
         if args.verify:
             verify_full_directory(args.translation_dir)
