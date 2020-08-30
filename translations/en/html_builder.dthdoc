@@ -1,0 +1,50 @@
+&doc_id HTMLBuilder
+"""
+Builds the HTML file from the layout and the language snippet given.
+"""
+
+&doc_id HTMLBuilder_init
+"""
+Initialises and runs the whole class.
+
+Args:
+    output_dir: The output directory where the index.html should be located
+    langs_list: The list of languages processed by doxyTH
+    replacements: The dictionary containing the replacements to some variables in the layout or snippet
+    template: The string of the HTML layout template file
+    lang_snippet_template: The string of the language snippet template
+"""
+
+&doc_id build_languages_list
+"""
+Builds the $langs replacement from the snippet template, for each language.
+"""
+
+&doc_id replace_in_template
+"""
+Replaces the variables ($<variable name>) by their replacement in the dict
+"""
+
+&doc_id write_template_to_output
+"""
+Writes the modified template file to the output directory under the name index.html
+"""
+
+&doc_id PrepareTemplates
+"""
+Small class that retrieves the templates from the resources/ folder of the module
+"""
+
+&doc_id PrepareTemplates_init
+"""
+Prepares the path of the resources folder
+
+Args:
+    gendoc_path: The path of the gendoc file (this class should only be run by gendoc or verify for accurate
+    location of the resources folder)
+"""
+
+&doc_id PrepareTemplates_call
+"""
+Opens and reads the templates, and returns the strings.
+"""

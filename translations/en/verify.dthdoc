@@ -1,0 +1,41 @@
+&doc_id main
+"""
+The main function of the verify file, executes when you run the file.
+
+It allows to check that the full/language directory, or a specific file, follows the right format.
+
+Argparse usage:
+    usage: verify.py [-h] {directory,dir,d,languagedirectory,langdir,ld,file,f} documentation
+Subparsers:
+    directory (dir, d): refer to the full translations directory
+    languagedirectory (langdir, ld): refer to a language directory
+    file (f): refer to a lone translations file
+"""
+
+&doc_id verify_file
+"""
+Reads a documentation file, and parses it.
+
+Args:
+    path: The path to the file
+    lone_file: Whether it is a lone file or part of a directory sweep
+    no_print: Whether we should forbid this function to print results (used for the full directory sweep)
+"""
+
+&doc_id lang_directory
+"""
+Verifies a language directory, file per file.
+
+Args:
+    path: The path to the language directory
+    no_print: Whether we should forbid this function to print. Simply passed to verify_file, does not affect this
+    function directly.
+"""
+
+&doc_id verify_full_directory
+"""
+Verifies the full translations directory.
+
+Args:
+    path: The path to the translations directory
+"""
