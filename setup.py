@@ -8,8 +8,8 @@ if sys.version_info[:2] < (3, 6):
     raise RuntimeError("Python version >= 3.6 required.")
 
 
-MAJOR = 0
-MINOR = 1
+MAJOR = 1
+MINOR = 0
 MICRO = 0
 IS_RELEASED = True
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
@@ -84,16 +84,17 @@ def setup_package():
 
         license='MIT',
         packages=[
-            'doxyth'
+            'doxyth',
+            'doxyth.utils',
+            'doxyth.resources'
         ],
 
         classifiers=[
-            'Development Status :: 4 - Beta',
+            'Development Status :: 5 - Production/Stable',
 
             'Environment :: Console',
 
             'Intended Audience :: Developers',
-            'Intended Audience :: System Administrators',
 
             'Topic :: Utilities',
 
