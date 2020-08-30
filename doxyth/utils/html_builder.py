@@ -80,6 +80,8 @@ class PrepareTemplates:
     """
 
     def __init__(self, gendoc_path: str):
+        from os import mkdir
+        from os.path import exists
         """
         ### &doc_id html_builder:PrepareTemplates_init
 
@@ -92,6 +94,14 @@ class PrepareTemplates:
 
         self.path = sep.join(gendoc_path.split(sep)[0:-1])
         self.path += f'{sep}resources{sep}'
+
+        if not exists(self.path):
+            mkdir(self.path)
+
+        if not exists(self.path + sep + 'template.html'):
+            GenerateTemplates(self.path)('template')
+        if not exists(self.path + sep + 'lang_snippet.html'):
+            GenerateTemplates(self.path)('snippet')
 
     def __call__(self):
         """
@@ -109,3 +119,58 @@ class PrepareTemplates:
         snippet = buf
 
         return template, snippet
+
+
+class GenerateTemplates:
+    template = """
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+        <meta charset="UTF-8">
+        <meta name="generator" content="DoxyTH $doxythversion">
+        <title>$projectname: Language selection</title>
+        <style>
+            html { background-color: #171717; color: #858585; font-family: Tahoma, Arial, sans-serif;}
+            #projectname { font-size: 2.5rem;}
+            #projectnumber { font-size: 1rem;}
+            #projectbrief { font-size: 1.2rem; font-style: italic;}
+            #lang-container { display: flex; }
+            .lang { border: 2px solid #454545; padding: 10px; margin: 10px;}
+            a:visited { color: #757575;}
+            a:not(visited) {color: rgb(0, 110, 191);}
+            a:hover {color: rgb(0, 145, 200);}
+        </style>
+        </head>
+        <body>
+        <div id="projectname">
+            $projectname
+            <span id="projectnumber">$projectnumber</span>
+        </div>
+        <div id="projectbrief">$projectbrief</div>
+        <hr>
+        <h2>Language selection</h2>
+        
+        <div id="lang-container">
+            $langs
+        </div>
+        
+        </body>
+        </html>
+    """
+
+    snippet = """
+        <a href="./$lang/index.html"><div class="lang">$lang</div></a>
+    """
+
+    def __init__(self, resources_path):
+        self.path = resources_path
+
+    def __call__(self, file):
+        if file == 'template':
+            with open(self.path + sep + 'template.html', 'w', encoding='utf-8') as f:
+                formatted = "".join([line.strip() + '\n' for line in self.template.split('\n')])
+                f.write(formatted)
+        elif file == 'snippet':
+            with open(self.path + sep + 'lang_snippet.html', 'w', encoding='utf-8') as f:
+                formatted = "".join([line.strip() + '\n' for line in self.snippet.split('\n')])
+                f.write(formatted)
