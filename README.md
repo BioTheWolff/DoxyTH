@@ -23,11 +23,11 @@ for the desired language. Directories having more or less than 2 charaters will 
 This is an example layout (and the one I use for the DoxyTH package documentation!)
 ```ignorelang
 <path>\DOXYTH\TRANSLATIONS
-├───en
-│       doxyth.dthdoc
-│       gendoc.dthdoc
-│
-└───fr
+|--- en/
+|       doxyth.dthdoc
+|       gendoc.dthdoc
+|
+|--- fr/
         gendoc.dthdoc
 ```
 (I simplified the tree for more readability)
