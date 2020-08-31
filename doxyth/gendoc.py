@@ -9,7 +9,7 @@ from os.path import isfile, join, exists, abspath
 from .verify import verify_full_directory
 from .utils.langs import is_valid_lang_dir, doxygen_languages
 from .utils.postprocess import available_postprocesses
-from .utils.html_builder import PrepareTemplates, HTMLBuilder
+from .utils.html_builder import get_templates, HTMLBuilder
 
 generated_data_file_name = '.dthdata'
 doxygen_file_name = '.dthdoxy'
@@ -41,9 +41,12 @@ class Gendoc:
     """
 
     available_translations = None
+    translations_dir = None
+
     verbose = None
     debug = None
     doxymute = None
+
     postprocess = None
     langs = None
 
@@ -120,22 +123,9 @@ class Gendoc:
             exit(0)
 
         else:
-            if args.debug:
-                self.verbose = True
-                self.debug = True
-            else:
-                self.verbose = False if args.noverbose else True
+            self.delegate_setup_args(args)
 
-            self.doxymute = args.noverbose or args.mute
-
-            # Check if postprocess is valid
-            if args.postprocess and args.postprocess not in available_postprocesses:
-                raise Exception(f"Postprocess {args.postprocess} not recognised. Available postprocesses: "
-                                f"{' / '.join(available_postprocesses)}")
-
-            self.postprocess = args.postprocess
-
-            self.analyze_translations_dir(args.translation_dir)
+            self.analyze_translations_dir(self.translations_dir)
 
             if not self.available_translations:
                 print("No applicable translation detected. Aborting.")
@@ -187,26 +177,59 @@ class Gendoc:
                             print("OK")
 
             # now creating the language selection file into the output directory
-            if self.verbose:
-                print("Creating language selection file")
+            self.delegate_create_lang_selection_file()
 
-            try:
-                from .version import version as doxythversion
-            except (ImportError, ModuleNotFoundError):
-                doxythversion = '<unknown version>'
-
-            replacements = {
-                "doxythversion": doxythversion,
-                **self.retrieve_replacements_from_doxyfile()
-            }
-
-            template, snippet = PrepareTemplates(abspath(__file__))()
-            HTMLBuilder(self.docs_output_path, self.available_translations, replacements, template, snippet)
-
+            # CLEANUP
             if not args.nocleanup:
                 self.cleanup()
             else:
                 print("Skipping cleanup.")
+
+    def delegate_setup_args(self, args):
+        if args.debug:
+            self.verbose = True
+            self.debug = True
+        else:
+            self.verbose = False if args.noverbose else True
+
+        self.doxymute = args.noverbose or args.mute
+        self.translations_dir = args.translation_dir
+
+        # Check if postprocess is valid
+        if args.postprocess and args.postprocess not in available_postprocesses:
+            raise Exception(f"Postprocess {args.postprocess} not recognised. Available postprocesses: "
+                            f"{' / '.join(available_postprocesses)}")
+
+        self.postprocess = args.postprocess
+
+    def delegate_create_lang_selection_file(self):
+        if self.verbose:
+            print("Creating language selection file")
+
+        try:
+            from .version import version as doxythversion
+        except (ImportError, ModuleNotFoundError):
+            doxythversion = '<unknown version>'
+
+        replacements = {
+            "doxythversion": doxythversion,
+            **self.retrieve_replacements_from_doxyfile()
+        }
+
+        # Grab the templates
+        template, snippet = get_templates()
+
+        # Change the templates to custom templates if they exist
+        if exists(abspath(self.translations_dir) + os.sep + '_TEMPLATE.html'):
+            with open(abspath(self.translations_dir) + os.sep + '_TEMPLATE.html', encoding='utf-8') as t:
+                template = t.read()
+
+        if exists(abspath(self.translations_dir) + os.sep + '_SNIPPET.html'):
+            with open(abspath(self.translations_dir) + os.sep + '_SNIPPET.html') as s:
+                snippet = s.read()
+
+        # Build the HTML file
+        HTMLBuilder(self.docs_output_path, self.available_translations, replacements, template, snippet)
 
     @staticmethod
     def retrieve_replacements_from_doxyfile():

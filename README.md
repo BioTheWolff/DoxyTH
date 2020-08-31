@@ -2,6 +2,9 @@
 DoxyTH stands for Doxygen inline-documentation Translation Helper. This small package aims to provide a 
 quick way to generate Doxygen docs in HTML (LaTeX will come later) in different languages easily.
 
+*Nota Bene:* Below, "a/the Doxyfile" refers to the Doxygen configuration file, however it might be named. However,
+`Doxyfile` (in code) refers to the exact name of the file.
+
 ## Setup
 ### Installation
 You first have to install the package.
@@ -35,7 +38,7 @@ This is an example layout (and the one I use for the DoxyTH package documentatio
 In each language directory, you will need to create one (or more) `.dthdoc` files. All files having
 another extension will be ignored.
 
-### Layout of a .dthdoc file
+#### Layout of a .dthdoc file
 Each file follows the current format:
 ```ignorelang
 &doc_id <ID>
@@ -52,6 +55,63 @@ the doclines where this ID is found.
 DoxyTH will remove any empty lines between the start of the doclines and the start of your comment 
 (same as between the end of your comment and the end of the doclines) to avoid problems when passing the file lines to a 
 postprocess.
+
+#### Layout of the language selection file
+You can create two files that will alter the output of the language selection html file.
+
+* One is called `_TEMPLATE.html` and must contain the main template.
+* The other is called `_SNIPPET.html` and must contain the language snippet that will be used for each language.
+
+##### _TEMPLATE.html 
+This file contains the full template of the html file.
+Create it however you want, using variables to put things dynamically in the template.
+
+**Mandatory variables**:
+* `$langs`: The group of snippets created and filled with variables.
+
+**Optional variables**:
+* `$doxythversion`: The current version of DoxyTH
+* `$projectname`: The name of the project (`PROJECT_NAME` in the Doxyfile)
+* `$projectnumber`: The version of the project (`PROJECT_NUMBER` in the Doxyfile)
+* `$projectbrief`: The brief description of the project (`PROJECT_BRIEF` in the Doxyfile)
+
+Example:
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="DoxyTH $doxythversion">
+<title>$projectname: Language selection</title>
+<style>...</style>
+</head>
+<body>
+<div id="projectname">
+$projectname
+<span id="projectnumber">$projectnumber</span>
+</div>
+<div id="projectbrief">$projectbrief</div>
+<hr>
+<h2>Language selection</h2>
+
+<div id="lang-container">
+$langs
+</div>
+
+</body>
+</html>
+```
+
+##### _SNIPPET.html
+This file contains the snippet that will be used for each language.
+
+**Mandatory variables**:
+* `$lang`: The language code
+
+Example:
+```html
+<a href="./$lang/index.html"><div class="lang">$lang</div></a>
+```
 
 ### In-code documentation
 In your code, you can then start to write the `doc_id`s.
@@ -75,7 +135,7 @@ See below under Usage how to deactivate file prefixes, if you wish to do so.
 ### Usage
 This is the usage provided by argparse itself:
 ```ignorelang
-usage: __main__.py [-h] [--verify] [-V] [--noverbose] [-F] [-D DOXYFILE]
+usage: __main__.py [-h] [--verify] [-V] [--noverbose] [-F] [-D DOXYFILE] [-O OUTPUT]
                    [-P POSTPROCESS] [--listpostprocesses] [--debug | --mute]
                    [--nocleanup] [--skipgen]
                    translation_dir
@@ -94,6 +154,7 @@ documentation
 - `-D` (or `--doxyfile`): Path to a custom Doxyfile. If this option is not provided, DoxyTH will look for a file 
 named `Doxyfile` by default. Passing this option is necessary only when your Doxygen configuration file is 
 NOT named `Doxyfile`
+- `-O` (or `--output`): Path to the output directory. If not given, defaults to `docs/`.
 - `-P` (or `--postprocess`): Passes the file lines to a postprocess instead of printing them back to Doxygen.
 - `--listpostprocesses`: Lists all the available postprocesses, then exits.
 - [`--debug` | `--mute`]: `debug` prints everything, including non-error from the Doxygen output, whereas `mute` totally
@@ -118,6 +179,17 @@ python -m doxyth
 
 using the usage above.
 
+### Output
+
+The result will be in the output directory you gave, and if you gave none, in `docs/`.
+
+The output directory will contain a subdirectory with the language code of said language, and inside will be a full
+Doxygen generation. Doxygen's output language will be set to said language, if a translation exists.
+
+You will also find a index.html in the output directory. This file is created by DoxyTH, following a template html file.
+If you wish to customise it, see 
+
+
 ### Verifying the translations
 
 If you wish to verify the translations files/directories, you can do so by running the verify package
@@ -140,7 +212,8 @@ positional arguments:
         (langdir, ld)   directory
     file (f)            Verify the documentation format of a file
 
-  documentation         The path of either the directory or the file
+                        Positional arguments
+    documentation       The path of either the directory or the file
 ```
 
 If you choose to verify the whole directory, it will ouput the number of translations per language and print a warning
