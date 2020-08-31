@@ -18,6 +18,11 @@ set upon running Gendoc, the file lines are instead sent to the postprocess (dox
 take care of printing the line itself, after doing its job.
 """
 
+&doc_id init
+"""
+Parses the args
+"""
+
 &doc_id flow
 """
 The flow function

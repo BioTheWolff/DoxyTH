@@ -77,13 +77,82 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Fonctions membres publiques</h2></td></tr>
-<tr class="memitem:a8f60d3b590ef8430d5edfb23d63de56b"><td class="memItemLeft" align="right" valign="top"><a id="a8f60d3b590ef8430d5edfb23d63de56b"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>__init__</b> (self)</td></tr>
+<tr class="memitem:a8f60d3b590ef8430d5edfb23d63de56b"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdoxyth_1_1utils_1_1postprocess_1_1_doxypypy_post_process.html#a8f60d3b590ef8430d5edfb23d63de56b">__init__</a> (self)</td></tr>
 <tr class="separator:a8f60d3b590ef8430d5edfb23d63de56b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2872493c024d2391af034b531500c1f8"><td class="memItemLeft" align="right" valign="top"><a id="a2872493c024d2391af034b531500c1f8"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>__call__</b> (self, filename, lines)</td></tr>
+<tr class="memitem:a2872493c024d2391af034b531500c1f8"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdoxyth_1_1utils_1_1postprocess_1_1_doxypypy_post_process.html#a2872493c024d2391af034b531500c1f8">__call__</a> (self, filename, lines)</td></tr>
 <tr class="separator:a2872493c024d2391af034b531500c1f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Description détaillée</h2>
+<div class="textblock"><pre class="fragment">### &amp;doc_id postprocess:DoxypypyPostProcess
+
+The class that serves as a bridge between DoxyTH and Doxypypy
+</pre> </div><h2 class="groupheader">Documentation des constructeurs et destructeur</h2>
+<a id="a8f60d3b590ef8430d5edfb23d63de56b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f60d3b590ef8430d5edfb23d63de56b">&#9670;&nbsp;</a></span>__init__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def doxyth.utils.postprocess.DoxypypyPostProcess.__init__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">### &amp;doc_id postprocess:DoxypypyPostprocess_init
+
+Tries to import doxypypy, and raises an exception if the module is not installed
+
+Raises:
+    ModuleNotFoundError: if the module is not installed/found
+</pre> 
+</div>
+</div>
+<h2 class="groupheader">Documentation des fonctions membres</h2>
+<a id="a2872493c024d2391af034b531500c1f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2872493c024d2391af034b531500c1f8">&#9670;&nbsp;</a></span>__call__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def doxyth.utils.postprocess.DoxypypyPostProcess.__call__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>filename</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>lines</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">### &amp;doc_id postprocess:DoxypypyPostProcess_call
+
+The main bridge between DoxyTH and Doxypypy. Re-creates the doxypypy variables and gives it to the AstWalker
+
+Args:
+    filename: The file name
+    lines: The file lines
+</pre> 
+</div>
+</div>
 <hr/>La documentation de cette classe a été générée à partir du fichier suivant :<ul>
 <li>doxyth/utils/postprocess.py</li>
 </ul>

@@ -29,7 +29,24 @@ class DoxyTH:
     postprocess, that acts as a bridge between what DoxyTH produced and what the postprocess requires.
     """
 
+    ## The current doxyTH config (retrieved from the generated data file)
+    config = None
+    ## The current language
+    lang = None
+    ## The file name
+    filename = None
+    ## The translations for this language
+    docs = None
+    ## The file lines
+    lines = None
+
     def __init__(self):
+        """
+        ### &doc_id doxyth:init
+
+        Parses the args
+        """
+
         import argparse
 
         parser = argparse.ArgumentParser()

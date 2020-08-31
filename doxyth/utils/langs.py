@@ -1,3 +1,4 @@
+# The valid ISO 639-1 language codes
 valid_codes = ['ab', 'aa', 'af', 'ak', 'sq', 'am', 'ar', 'an', 'hy', 'as', 'av', 'ae', 'ay', 'az', 'bm', 'ba', 'eu',
                'be', 'bn', 'bh', 'bi', 'bs', 'br', 'bg', 'my', 'ca', 'ch', 'ce', 'ny', 'zh', 'cv', 'kw', 'co', 'cr',
                'hr', 'cs', 'da', 'dv', 'nl', 'dz', 'en', 'eo', 'et', 'ee', 'fo', 'fj', 'fi', 'fr', 'ff', 'gl', 'ka',
@@ -10,6 +11,7 @@ valid_codes = ['ab', 'aa', 'af', 'ak', 'sq', 'am', 'ar', 'an', 'hy', 'as', 'av',
                'ta', 'te', 'tg', 'th', 'ti', 'bo', 'tk', 'tl', 'tn', 'to', 'tr', 'ts', 'tt', 'tw', 'ty', 'ug', 'uk',
                'ur', 'uz', 've', 'vi', 'vo', 'wa', 'cy', 'wo', 'fy', 'xh', 'yi', 'yo', 'za', 'zu']
 
+# The available doxygen languages in codes, and the linked doxygen languages
 doxygen_languages = {
     "af": "Afrikaans",
     "ar": "Arabic",
@@ -58,8 +60,28 @@ doxygen_languages = {
 
 
 def is_valid_lang_dir(name):
+    """
+    Whether the directory name is a valid language code
+
+    Args:
+        name: The directory name
+
+    Returns:
+        bool
+    """
+
     return name in valid_codes and len(name) == 2
 
 
 def ascii_encode(string: str):
+    """
+    Encodes the string in ascii in ignore mode
+
+    Args:
+        string: The string
+
+    Returns:
+        The string in ascii
+    """
+
     return str(string.encode('ascii', 'ignore'))[2:-1]

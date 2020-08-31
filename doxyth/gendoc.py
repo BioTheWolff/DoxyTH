@@ -40,22 +40,28 @@ class Gendoc:
     translations rules defined in all the .dthdoc files.
     """
 
+    ## The available translations
     available_translations = None
+    ## The path to the translations directory
     translations_dir = None
 
+    ## Verbose param
     verbose = None
+    ## Debug param
     debug = None
+    ## Doxymute param
     doxymute = None
 
+    ## The selected postprocess
     postprocess = None
+    ## The translations for all languages
     langs = None
 
-    docs_output_path = 'docs'
+    ## DoxyTH output path
+    docs_output_path = None
 
+    ## The init function
     def __init__(self):
-        """
-        ### &doc_id gendoc:init
-        """
 
         parser = argparse.ArgumentParser()
         parser.add_argument("translation_dir", help="Documentations to replace the 'doc_id's.")
@@ -115,8 +121,7 @@ class Gendoc:
             print(f"Available postprocess(es): {', '.join(available_postprocesses)}")
             exit(0)
 
-        if args.output:
-            self.docs_output_path = args.output
+        self.docs_output_path = args.output if args.output else 'docs'
 
         if args.verify:
             verify_full_directory(args.translation_dir)
@@ -186,6 +191,15 @@ class Gendoc:
                 print("Skipping cleanup.")
 
     def delegate_setup_args(self, args):
+        """
+        ### &doc_id gendoc:delegate_setup_args
+
+        Setups the args into class variables.
+
+        Args:
+            args: The argparse arguments
+        """
+
         if args.debug:
             self.verbose = True
             self.debug = True
@@ -203,6 +217,12 @@ class Gendoc:
         self.postprocess = args.postprocess
 
     def delegate_create_lang_selection_file(self):
+        """
+        ### &doc_id gendoc:delegate_lang_file
+
+        Creates the language selection file from the corresponding templates
+        """
+
         if self.verbose:
             print("Creating language selection file")
 
@@ -233,6 +253,15 @@ class Gendoc:
 
     @staticmethod
     def retrieve_replacements_from_doxyfile():
+        """
+        ### &doc_id gendoc:retrieve_from_doxyfile
+
+        Retrieves the required variables from the doxyfile and returns them
+
+        Returns:
+            the variables and their value
+        """
+
         final = {}
 
         with open(doxygen_file_name, encoding='utf-8') as f:

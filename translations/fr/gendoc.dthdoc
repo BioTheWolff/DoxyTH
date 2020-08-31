@@ -1,73 +1,93 @@
-&doc_id init
+&doc_id class
 """
-La fonction d'init
+La classe principale du module
 
-Prends le dossier des traductions comme paramètre et le passe par argparse.
+Permet la génération de plusieurs documentations Doxygen, une pour chaque langue reconnue par la norme ISO 639-1.
+Peut être lancé en lançant soit ce paquet-ci, soit en lançant directement le module.
+
+Si vous avez besoin d'information sur comment formatter le dossier des traductions, consultez le README.
 """
 
 &doc_id flow
 """
-La flow function.
+La fonction de flow de la classe
 
-Permet de répartir aisément le travail entre différentes fonctions plus petites.
+Permet de répartir facilement les tâches entre différentes fonctions pour une meilleure lecture.
 """
 
 &doc_id setup_doxygen
 """
-Mets en place les fichiers concernant doxygen.
+Mets en place les différents fichiers Doxygen.
 
-Les fichiers sont: la config doxygen (.dthdoxy), le batch (.dthb.bat) et le JSON dump de la liste de toutes les
-traductions (.dtht).
+Les fichiers sont: le fichier de configuration de Doxygen, le fichier batch et la liste de toutes les traductions
 
 Args:
-    translations_dir: Le dossier des traductions
-    doxyfile_path: Le chemin d'un fichier de config Doxygen déjà existant
+    translations_dir: Le dossier de traductions, argument envoyé par argparse
+    doxyfile_path: Le chemin vers un fichier de configuration Doxygen existant
 """
 
 &doc_id cleanup
 """
-La dernière fonction appelée par la classe.
+Dernière fonction appellée par la classe.
 
-"Nettoie" en supprimant les trois fichiers temporaires créés par les fonctions flow et setup_doxygen_files.
+"Nettoie" en retirant les trois fichiers temporaires créés par la fonction setup_doxygen_files
 """
 
 &doc_id adapt_to_lang
 """
-Adapte les fichiers de configuration à la langue actuelle.
+Adapte les fichiers temporaires à la langue actuelle.
 
-Change l'output HTML de doxygen, et le paramètre de langue du batch pour dire à doxyth quelle langue il doit prendre
-pour référence.
+Change le dossier de sortie de Doxygen, et le paramètre de langue du fichier batch
 
 Args:
-    lang: La langue actuelle.
+    lang: La langue actuelle
 """
 
 &doc_id write_config
 """
-Écrit un dump JSON de toutes les documentations des différentes langues collectées dans le fichier de config.
-
-Inclut les options de configuration pour ce lancement de DoxyTH.
+Écrit un dump JSON de toutes les traductions collectées pour tous les langages, et d'autres options de configuration, dans un fichier temporaire.
 """
 
 &doc_id analyze_translations_dir
 """
-Lis le dossier des traductions et cherche les codes de langue.
+Lis le dossier de traductions et cherche les codes de langues.
 
-Cette fonction regarde tous les sous-dossiers pour voir si ils correspondent à un code ISO 639-1 (à deux lettres)
-valide. Si le sous-dossier remplit ces conditions, on enregistre le code de la langue et retourne la liste des codes une
-fois fini.
+Cette fonction regarde tous les sous-répertoires pour voir si ils correspondent à un code ISO 639-1 valide.
+Retourne la liste des codes valides une fois terminé.
 
 Args:
-    path: Le chemin du dossier des traductions
+    path: Le chemin du dossier de traductions
 """
 
 &doc_id read_doc_files
 """
-Lis les fichiers contenant la documentation et enregistre chaque documentation.
+Lis les fichiers de documentation et enregistre chaque texte de documentation.
 
-Cette fonction lis les fichiers de documentation dans le dossier de la langue qu'on lui a donnée, et enregistre toutes
-les références de documentation valides, puis les retourne toutes une fois la "fouille" finie.
+Cette fonction lis les fichiers de traductions et enregistre toutes les références (identifiants) et leurs traductions
+associées pour utilisation future par le fichier doxyth.
 
 Args:
-    path: Le dossier de la langue dont on veut extraire les documentations traduites.
+    path: Le chemin du répertoire de langue à lire
+    nofileprefix: Si on doit désactiver le préfixe de fichier ou non
+"""
+
+&doc_id delegate_setup_args
+"""
+Mets en place les variables de classe à partir des arguments d'argparse.
+
+Args:
+    args: Les arguments d'argparse
+"""
+
+&doc_id delegate_lang_file
+"""
+Crée le fichier de sélection de langues en partant des templates correspondants
+"""
+
+&doc_id retrieve_from_doxyfile
+"""
+Va chercher les variables requises dans le doxyfile et les renvoie
+
+Returns:
+    les variables et leur valeur associée
 """

@@ -12,6 +12,19 @@ class HTMLBuilder:
     Builds the HTML file from the layout and the language snippet given.
     """
 
+    ## The output directory
+    output = None
+    ## The replacements dictionary
+    replacements = None
+    ## The html layout template file
+    template = None
+    ## The list of languages
+    langs_list = None
+    ## The language snippet template
+    snippet_template = None
+    ## The string that will contain all the langs
+    langs = None
+
     def __init__(self, output_dir, langs_list: list, replacements: dict, template: str, lang_snippet_template: str):
         """
         ### &doc_id html_builder:HTMLBuilder_init
@@ -34,7 +47,9 @@ class HTMLBuilder:
 
         self.__flow()
 
+    ## The flow function
     def __flow(self):
+
         self.__build_languages_list()
         self.__replace_in_template()
         self.__write_template_to_output()
@@ -73,16 +88,17 @@ class HTMLBuilder:
 
 
 class PrepareTemplates:
-    # \deprecated This class writes the html files into the resources/ folder and grabs them. Use get_templates instead.
     """
     ### &doc_id html_builder:PrepareTemplates
 
     Small class that retrieves the templates from the resources/ folder of the module
+    @deprecated This class writes the html files into the resources/ folder and grabs them. Use get_templates.
     """
 
+    ## The path to the resources
+    path = None
+
     def __init__(self, gendoc_path: str):
-        from os import mkdir
-        from os.path import exists
         """
         ### &doc_id html_builder:PrepareTemplates_init
 
@@ -92,6 +108,9 @@ class PrepareTemplates:
             gendoc_path: The path of the gendoc file (this class should only be run by gendoc or verify for accurate
             location of the resources folder)
         """
+
+        from os import mkdir
+        from os.path import exists
 
         self.path = sep.join(gendoc_path.split(sep)[0:-1])
         self.path += f'{sep}resources{sep}'
@@ -123,6 +142,13 @@ class PrepareTemplates:
 
 
 class GenerateTemplates:
+    """
+    ### &doc_id html_builder:GenerateTemplates
+
+    The class that generates the templates from the given strings, in the resources folder given.
+    """
+
+    ## The html template
     template = """
     <!DOCTYPE html>
     <html lang="en">
@@ -159,14 +185,36 @@ class GenerateTemplates:
     </html>
     """
 
+    ## The language snippet
     snippet = """
     <a href="./$lang/index.html"><div class="lang">$lang</div></a>
     """
 
+    ## The path to the resources folder
+    path = None
+
     def __init__(self, resources_path):
+        """
+        ### &doc_id html_builder:GenerateTemplates_init
+
+        Simply saves the resource path
+
+        Args:
+            resources_path: The path to the resource
+        """
+
         self.path = resources_path
 
     def __call__(self, file):
+        """
+        ### &doc_id html_builder:GenerateTemplates_call
+
+        Writes the templates in the corresponding files
+
+        Args:
+            file: Either 'template' or 'snippet', to render either of the two.
+        """
+
         if file == 'template':
             with open(self.path + sep + 'template.html', 'w', encoding='utf-8') as f:
                 formatted = "".join([line.strip() + '\n' for line in self.template.split('\n')])
@@ -177,5 +225,6 @@ class GenerateTemplates:
                 f.write(formatted)
 
 
+## Returns the templates
 def get_templates():
     return GenerateTemplates.template, GenerateTemplates.snippet

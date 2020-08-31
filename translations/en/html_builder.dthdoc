@@ -48,3 +48,24 @@ Args:
 """
 Opens and reads the templates, and returns the strings.
 """
+
+&doc_id GenerateTemplates
+"""
+The class that generates the templates from the given strings, in the resources folder given.
+"""
+
+&doc_id GenerateTemplates_init
+"""
+Simply saves the resource path
+
+Args:
+    resources_path: The path to the resource
+"""
+
+&doc_id GenerateTemplates_call
+"""
+Writes the templates in the corresponding files
+
+Args:
+    file: Either 'template' or 'snippet', to render either of the two.
+"""

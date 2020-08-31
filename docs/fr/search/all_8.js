@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['read_5fdocs_21',['read_docs',['../classdoxyth_1_1gendoc_1_1_gendoc.html#a04fef0326247c7695d6a0c3d919e1ee0',1,'doxyth::gendoc::Gendoc']]]
+  ['output_33',['output',['../classdoxyth_1_1utils_1_1html__builder_1_1_h_t_m_l_builder.html#acedfb848ba8fe29ccf55587a8fea88c6',1,'doxyth::utils::html_builder::HTMLBuilder']]]
 ];

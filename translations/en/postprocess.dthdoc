@@ -1,0 +1,31 @@
+&doc_id DoxypypyPostProcess
+"""
+The class that serves as a bridge between DoxyTH and Doxypypy
+"""
+
+&doc_id DoxypypyPostprocess_init
+"""
+Tries to import doxypypy, and raises an exception if the module is not installed
+
+Raises:
+    ModuleNotFoundError: if the module is not installed/found
+"""
+
+&doc_id DoxypypyPostProcess_call
+"""
+The main bridge between DoxyTH and Doxypypy. Re-creates the doxypypy variables and gives it to the AstWalker
+
+Args:
+    filename: The file name
+    lines: The file lines
+"""
+
+&doc_id dispatcher
+"""
+Dispatches the file name and lines to the right class, depending on the postprocess string given
+
+Args:
+    postprocess: The string of the postprocess, taken directly from the command line argument
+    filename: The file name
+    lines: The file lines
+"""
