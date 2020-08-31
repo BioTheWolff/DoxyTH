@@ -7,7 +7,7 @@ import shutil
 from sys import stdout
 from os.path import isfile, join, exists, abspath
 from .verify import verify_full_directory
-from .utils.langs import is_valid_lang_dir, doxygen_languages
+from .utils.langs import is_valid_lang_dir, doxygen_languages, ascii_encode
 from .utils.postprocess import available_postprocesses
 from .utils.html_builder import get_templates, HTMLBuilder
 
@@ -239,14 +239,19 @@ class Gendoc:
             buf = f.readlines()
 
         for line in buf:
-            if re.match(r"^PROJECT_NAME\s*=\s*", line.strip()):
-                final['projectname'] = re.split(r'^PROJECT_NAME\s*=\s*["\'](.+)["\']', line.strip())[-2]
+            try:
+                stripped_line = line.strip()
+            except UnicodeEncodeError:
+                stripped_line = ascii_encode(line).strip()
 
-            if re.match(r"^PROJECT_NUMBER\s*=\s*", line.strip()):
-                final['projectnumber'] = re.split(r"^PROJECT_NUMBER\s*=\s*", line.strip())[-1]
+            if re.match(r"^PROJECT_NAME\s*=\s*", stripped_line):
+                final['projectname'] = re.split(r'^PROJECT_NAME\s*=\s*["\'](.+)["\']', stripped_line)[-2]
 
-            if re.match(r"^PROJECT_BRIEF\s*=\s*", line.strip()):
-                final['projectbrief'] = re.split(r'^PROJECT_BRIEF\s*=\s*["\'](.+)["\']', line.strip())[-2]
+            if re.match(r"^PROJECT_NUMBER\s*=\s*", stripped_line):
+                final['projectnumber'] = re.split(r"^PROJECT_NUMBER\s*=\s*", stripped_line)[-1]
+
+            if re.match(r"^PROJECT_BRIEF\s*=\s*", stripped_line):
+                final['projectbrief'] = re.split(r'^PROJECT_BRIEF\s*=\s*["\'](.+)["\']', stripped_line)[-2]
 
         return final
 
@@ -297,24 +302,29 @@ class Gendoc:
             lines = f.readlines()
 
         for n, line in enumerate(lines):
+            try:
+                stripped_line = line.strip()
+            except UnicodeEncodeError:
+                stripped_line = ascii_encode(line).strip()
+
             # Sets it to exclude already existing docs
-            if re.match(r"^EXCLUDE\s*=", line.strip()):
-                existing = re.split(r"^EXCLUDE\s*=\s*", line.strip())[-1]
+            if re.match(r"^EXCLUDE\s*=", stripped_line):
+                existing = re.split(r"^EXCLUDE\s*=\s*", stripped_line)[-1]
                 if existing:
                     lines[n:n + 1] = f"EXCLUDE = {existing} \\ {self.docs_output_path}/ \\ {translations_dir}\n"
                 else:
                     lines[n:n + 1] = f"EXCLUDE = {self.docs_output_path}/ \\ {translations_dir}\n"
 
             # Sets recursion ON
-            if re.match(r"^RECURSIVE\s*=", line.strip()):
+            if re.match(r"^RECURSIVE\s*=", stripped_line):
                 lines[n] = "RECURSIVE = YES\n"
 
             # LaTeX generation OFF
-            if re.match(r"^GENERATE_LATEX\s*=", line.strip()):
+            if re.match(r"^GENERATE_LATEX\s*=", stripped_line):
                 lines[n] = "GENERATE_LATEX = NO\n"
 
             # The DoxyTH batch file that will tell the file ran by Doxygen what translation to read
-            if re.match(r"^FILTER_PATTERNS\s*=", line.strip()):
+            if re.match(r"^FILTER_PATTERNS\s*=", stripped_line):
                 lines[n] = f"FILTER_PATTERNS = *py=.dthb\n"
 
         with open(doxygen_file_name, 'w', encoding='utf-8') as f:
@@ -363,11 +373,16 @@ class Gendoc:
             lines = f.readlines()
 
         for n, line in enumerate(lines):
+            try:
+                stripped_line = line.strip()
+            except UnicodeEncodeError:
+                stripped_line = ascii_encode(line).strip()
+
             # Change HTML output
-            if re.match(r"^HTML_OUTPUT\s*=", line.strip()):
+            if re.match(r"^HTML_OUTPUT\s*=", stripped_line):
                 lines[n] = f"HTML_OUTPUT = {self.docs_output_path}/{lang}/\n"
 
-            if re.match(r"^OUTPUT_LANGUAGE\s*=", line.strip()):
+            if re.match(r"^OUTPUT_LANGUAGE\s*=", stripped_line):
                 if lang in doxygen_languages.keys():
                     lines[n] = f"OUTPUT_LANGUAGE = {doxygen_languages[lang]}\n"
 
@@ -443,13 +458,18 @@ class Gendoc:
             buffer = []
             just_read_id = False
             for line in lines:
-                if re.match(r"\s*&doc_id\s*", line.strip()):
-                    buffer_name = re.split(r"\s*&doc_id\s*", line.strip())[-1]
+                try:
+                    stripped_line = line.strip()
+                except UnicodeEncodeError:
+                    stripped_line = ascii_encode(line).strip()
+
+                if re.match(r"\s*&doc_id\s*", stripped_line):
+                    buffer_name = re.split(r"\s*&doc_id\s*", stripped_line)[-1]
                     just_read_id = True
                     continue
-                elif line.strip() == '"""' and just_read_id:
+                elif stripped_line == '"""' and just_read_id:
                     just_read_id = False
-                elif line.strip() == '"""' and not just_read_id:
+                elif stripped_line == '"""' and not just_read_id:
                     if buffer_name in final.keys():
                         raise Exception(f"ID {buffer_name} found multiple times in the same file.")
 
@@ -459,7 +479,11 @@ class Gendoc:
                         file_doc[f'{filename}:{buffer_name}'] = buffer
                     buffer_name, buffer = None, []
                 else:
-                    buffer.append(line.rstrip() + '\n')
+                    try:
+                        stripped_line = line.rstrip()
+                    except UnicodeEncodeError:
+                        stripped_line = ascii_encode(line).rstrip()
+                    buffer.append(stripped_line + '\n')
 
             if buffer or buffer_name:
                 raise Exception(f"Warning: Unexpected EOF while reading ID {buffer_name} in file "

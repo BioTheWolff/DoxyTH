@@ -5,6 +5,19 @@ quick way to generate Doxygen docs in HTML (LaTeX will come later) in different 
 *Nota Bene:* Below, "a/the Doxyfile" refers to the Doxygen configuration file, however it might be named. However,
 `Doxyfile` (in code) refers to the exact name of the file.
 
+## Pre-requisites
+As DoxyTH is a support for [Doxygen](https://www.doxygen.nl/), you must have it installed. You can download it on 
+[this page](https://www.doxygen.nl/download.html).
+
+Furthermore, Doxygen must be in your `PATH`. If it is not, or if you doubt it is, check how to do it for your system.
+A simple search of `<OS> put variable in path` (OS being your Operating System) may be enough to find 
+what you are looking for.
+
+You must have Python 3.6 or better, else you won't be able to install it through pip.
+
+You should also know how to customise a [Doxyfile](https://www.doxygen.nl/manual/config.html)
+(Doxygen configuration file).
+
 ## Setup
 ### Installation
 You first have to install the package.
@@ -221,3 +234,95 @@ if the number of translations of at least one language is different from the oth
 
 If you choose to verify either a language directory or a file, it will print the number of doc_ids found in this file,
 or any errors if some are found.
+
+## Troubleshoot
+
+"It doesn't work!". Yes, that happens, I'm sadly no master in my craft yet and you can sometimes get some unexpected
+errors. First thing to do, re-run the program with the `--debug` option, so you can have the full output, Doxygen output
+included.
+
+I will do my best to list the errors you may encounter, and how to fix them. If you have any question, or the fix does
+not work, please create and issue, describe it the best possible, and file the full output (including the command
+itself) so I can work on it better and faster.
+
+### Exception: Unexpected EOF while reading.
+The traceback of this exception will often look like this:
+```ignorelang
+Traceback (most recent call last):
+  File "C:\Users\MOI\AppData\Local\Programs\Python\Python36-32\lib\runpy.py", li
+ne 193, in _run_module_as_main
+    "__main__", mod_spec)
+  File "C:\Users\MOI\AppData\Local\Programs\Python\Python36-32\lib\runpy.py", li
+ne 85, in _run_code
+    exec(code, run_globals)
+  File "C:\Users\MOI\AppData\Local\Programs\Python\Python36-32\lib\site-packages
+\doxyth\doxyth.py", line 185, in <module>
+    DoxyTH()
+  File "C:\Users\MOI\AppData\Local\Programs\Python\Python36-32\lib\site-packages
+\doxyth\doxyth.py", line 38, in __init__
+    self.__flow(args)
+  File "C:\Users\MOI\AppData\Local\Programs\Python\Python36-32\lib\site-packages
+\doxyth\doxyth.py", line 61, in __flow
+    lines = self.__modify_lines()
+  File "C:\Users\MOI\AppData\Local\Programs\Python\Python36-32\lib\site-packages
+\doxyth\doxyth.py", line 166, in __modify_lines
+    raise Exception(f"Unexpected EOF while reading.")
+```
+
+**Explanation**: The program found an unexpected EOF (End Of File) while reading it.
+
+**POTENTIAL CAUSES**:
+* You did not close a documentation in one of the translations files (.dthdoc files).
+* You did not close a doclines in one of your files.
+
+**SOLUTIONS**:
+* Look into the file that was last read before the exception was raised. (Activating the `--debug` option is useful 
+for that). The last line before the traceback will look like `Reading C:/my_folder/my_file.py...` which allows you to 
+locate the file easily.
+* Check if the opening and closing tags (`"""`) of the doclines are ALONE on their line (only stripped characters, like
+tabs, spaces and newlines are allowed on this line).
+
+### IndexError: list index out of range
+It often looks like this:
+```ignorelang
+Traceback (most recent call last):
+  File "C:\Users\MOI\AppData\Local\Programs\Python\Python36-32\lib\runpy.py", li
+ne 193, in _run_module_as_main
+    "__main__", mod_spec)
+  File "C:\Users\MOI\AppData\Local\Programs\Python\Python36-32\lib\runpy.py", li
+ne 85, in _run_code
+    exec(code, run_globals)
+  File "C:\Users\MOI\AppData\Local\Programs\Python\Python36-32\lib\site-packages
+\doxyth\__main__.py", line 3, in <module>
+    Gendoc()
+  File "C:\Users\MOI\AppData\Local\Programs\Python\Python36-32\lib\site-packages
+\doxyth\gendoc.py", line 85, in __init__
+    self.flow(args)
+  File "C:\Users\MOI\AppData\Local\Programs\Python\Python36-32\lib\site-packages
+\doxyth\gendoc.py", line 195, in flow
+    **self.retrieve_replacements_from_doxyfile()
+  File "C:\Users\MOI\AppData\Local\Programs\Python\Python36-32\lib\site-packages
+\doxyth\gendoc.py", line 221, in retrieve_replacements_from_doxyfile
+    final['projectbrief'] = re.split(r'^PROJECT_BRIEF\s*=\s*["\'](.+)["\']', lin
+e.strip())[-2]
+```
+
+**Explanation**: The list is not long enough to get the before-the-last element.
+
+**POTENTIAL CAUSES**:
+* This exception can be caused by a few things (everything managed by regexes, actually).
+If the last line before the traceback is `Creating language selection file`, then it might be because of how you
+formatted your doxyfile.
+
+**SOLUTIONS**:
+* If the last line before the traceback is `Creating language selection file`, then check the Doxyfile and look at the
+`PROJECT_NAME` and `PROJECT_BRIEF` variables. The text you put in value must always be between quotes, may they be
+simple (`'`) or double (`"`). 
+
+### The "silent" problems
+Sometimes, there is a problem, even if the program ran successfully and no exception was thrown. 
+
+**"Some of the characters that are in my code don't appear!"**: It may be because either the program or your computer
+decided to use an encoding that doesn't support those characters. I created a safe mode that encodes the text into ascii
+to avoid any further error with the text. So instead of crashing, it deletes said characters and continues.
+**It's not the best, but it avoids not being able to create the documentation of a WHOLE file**.

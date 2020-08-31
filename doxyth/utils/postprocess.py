@@ -13,9 +13,13 @@ class DoxypypyPostProcess:
         from doxypypy.doxypypy import AstWalker
         from os import sep
         from optparse import Values
+        from .langs import ascii_encode
 
         # Replace all the lines by a normal \n at the end
-        lines = [f"{line.rstrip()}\n" for line in lines]
+        try:
+            lines = [f"{line.rstrip()}\n" for line in lines]
+        except UnicodeEncodeError:
+            lines = [f"{ascii_encode(line).rstrip()}\n" for line in lines]
 
         # Define options
         options = {'autobrief': True, 'autocode': True, 'topLevelNamespace': None, 'tablength': 4, 'debug': None}

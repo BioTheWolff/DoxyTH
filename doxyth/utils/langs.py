@@ -59,3 +59,7 @@ doxygen_languages = {
 
 def is_valid_lang_dir(name):
     return name in valid_codes and len(name) == 2
+
+
+def ascii_encode(string: str):
+    return str(string.encode('ascii', 'ignore'))[2:-1]

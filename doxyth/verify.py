@@ -2,7 +2,7 @@ import argparse
 import re
 import os
 from os.path import isfile, join, isdir, abspath
-from .utils.langs import is_valid_lang_dir
+from .utils.langs import is_valid_lang_dir, ascii_encode
 
 ## @package verify
 #
@@ -79,20 +79,25 @@ def verify_file(path, lone_file=True, no_print=False):
     buffer = []
     just_read_id = False
     for line in lines:
-        if re.match(r"\s*&doc_id\s*", line.strip()):
-            buffer_name = re.split(r"\s*&doc_id\s*", line.strip())[-1]
+        try:
+            stripped_line = line.strip()
+        except UnicodeEncodeError:
+            stripped_line = ascii_encode(line).strip()
+
+        if re.match(r"\s*&doc_id\s*", stripped_line):
+            buffer_name = re.split(r"\s*&doc_id\s*", stripped_line)[-1]
             just_read_id = True
             continue
-        elif line.strip() == '"""' and just_read_id:
+        elif stripped_line == '"""' and just_read_id:
             just_read_id = False
-        elif line.strip() == '"""' and not just_read_id:
+        elif stripped_line == '"""' and not just_read_id:
             if buffer_name in final.keys():
                 print(f"ID {buffer_name} found multiple times in the same file.")
                 exit()
             final[buffer_name] = buffer
             buffer_name, buffer = None, []
         else:
-            buffer.append(line.strip() + '\n')
+            buffer.append(stripped_line + '\n')
 
     if not no_print:
         if not lone_file:

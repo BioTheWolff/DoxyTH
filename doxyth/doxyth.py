@@ -1,3 +1,5 @@
+from .utils.langs import ascii_encode
+
 ## @package doxyth
 #
 # Package that contains the DoxyTH class, used by Doxygen as a file pattern processor.
@@ -64,7 +66,10 @@ class DoxyTH:
             postprocess_dispatcher(self.config['postprocess'], args.filename, lines)
         else:
             for line in lines:
-                print(line.rstrip())
+                try:
+                    print(line.rstrip())
+                except UnicodeEncodeError:
+                    print(ascii_encode(line).rstrip())
 
     @staticmethod
     def __fetch_data_file():
@@ -130,7 +135,11 @@ class DoxyTH:
 
         # Find the lines that are to replace
         for n, line in enumerate(final):
-            if line.strip() == '"""':
+            try:
+                stripped_line = line.strip()
+            except UnicodeEncodeError:
+                stripped_line = ascii_encode(line).strip()
+            if stripped_line == '"""':
                 if not in_doc:
                     # We just entered in a doc, set the starting line number and the offset
                     doclines[0] = n
@@ -151,7 +160,10 @@ class DoxyTH:
             if in_doc:
                 if re.match(r"\s*###\s*&doc_id\s*", line):
                     # Found, we now split by regex and register the doc id
-                    new = re.split(r"\s*###\s*&doc_id\s*", line.rstrip())[-1]
+                    try:
+                        new = re.split(r"\s*###\s*&doc_id\s*", line.rstrip())[-1]
+                    except UnicodeEncodeError:
+                        new = re.split(r"\s*###\s*&doc_id\s*", ascii_encode(line).rstrip())[-1]
                     if doc_id:
                         print(f"{self.filename}:{n}: warning: Found multiple IDs in the same doclines:"
                               f" 1st '{doc_id}'; 2nd '{new}'.", file=stderr)
