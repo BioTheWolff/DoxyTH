@@ -135,3 +135,4 @@ dmypy.json
 # stems
 stems/
 doxyth/version.py
+gen_version_file.py

@@ -66,6 +66,8 @@ class Gendoc:
         # Config options
         parser.add_argument("-D", "--doxyfile", help="The path to an already existing Doxyfile that DoxyTH will use as "
                                                      "a base")
+        parser.add_argument("-O", "--output", help="The path to the output directory. If not provided, defaults to "
+                                                   "docs/")
         parser.add_argument("-P", "--postprocess", help="The process to run after using DoxyTH. This process"
                                                         "will return the file lines to Doxygen.")
         parser.add_argument("--listpostprocesses", help="List the available postprocesses, then exits.",
@@ -109,6 +111,9 @@ class Gendoc:
         if args.listpostprocesses:
             print(f"Available postprocess(es): {', '.join(available_postprocesses)}")
             exit(0)
+
+        if args.output:
+            self.docs_output_path = args.output
 
         if args.verify:
             verify_full_directory(args.translation_dir)
