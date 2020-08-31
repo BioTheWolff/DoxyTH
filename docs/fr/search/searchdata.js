@@ -1,8 +1,8 @@
 var indexSectionsWithContent =
 {
-  0: "_acdfghprsw",
+  0: "_acdfghprsvw",
   1: "dghp",
-  2: "dg",
+  2: "dghv",
   3: "_acfrsw",
   4: "d"
 };
@@ -18,10 +18,10 @@ var indexSectionNames =
 
 var indexSectionLabels =
 {
-  0: "All",
+  0: "Tout",
   1: "Classes",
-  2: "Namespaces",
-  3: "Functions",
+  2: "Espaces de nommage",
+  3: "Fonctions",
   4: "Pages"
 };
 

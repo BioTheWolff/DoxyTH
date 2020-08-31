@@ -10,6 +10,52 @@ valid_codes = ['ab', 'aa', 'af', 'ak', 'sq', 'am', 'ar', 'an', 'hy', 'as', 'av',
                'ta', 'te', 'tg', 'th', 'ti', 'bo', 'tk', 'tl', 'tn', 'to', 'tr', 'ts', 'tt', 'tw', 'ty', 'ug', 'uk',
                'ur', 'uz', 've', 'vi', 'vo', 'wa', 'cy', 'wo', 'fy', 'xh', 'yi', 'yo', 'za', 'zu']
 
+doxygen_languages = {
+    "af": "Afrikaans",
+    "ar": "Arabic",
+    "hy": "Armenian",
+    # "": "Brazilian", Ignored because of the lack of a language code for Brazilian
+    "ca": "Catalan",
+    "zh": "Chinese",
+    "zh-alt": "Chinese-Traditional",
+    "hr": "Croatian",
+    "cs": "Czech",
+    "da": "Danish",
+    "nl": "Dutch",
+    "en": "English",
+    "eo": "Esperanto",
+    # "": "Farsi", Ignored because fa refers to "Persian" macrolanguage, and also to "Farsi". Persian has the priority
+    "fi": "Finnish",
+    "fr": "French",
+    "de": "German",
+    "el": "Greek",
+    "hu": "Hungarian",
+    "id": "Indonesian",
+    "it": "Italian",
+    "ja": "Japanese",
+    "ja-alt": "Japanese-en",
+    "ko": "Korean",
+    "ko-alt": "Korean-en",
+    "lv": "Latvian",
+    "lt": "Lithuanian",
+    "mk": "Macedonian",
+    "no": "Norwegian",
+    "fa": "Persian",
+    "pl": "Polish",
+    "pt": "Portuguese",
+    "ro": "Romanian",
+    "ru": "Russian",
+    "sr": "Serbian",
+    "sr-alt": "Serbian-Cyrillic",
+    "sk": "Slovak",
+    "sl": "Slovene",
+    "es": "Spanish",
+    "sv": "Swedish",
+    "tr": "Turkish",
+    "uk": "Ukrainian",
+    "vi": "Vietnamese"
+}
+
 
 def is_valid_lang_dir(name):
     return name in valid_codes and len(name) == 2

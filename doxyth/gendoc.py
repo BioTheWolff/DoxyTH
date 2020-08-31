@@ -7,7 +7,7 @@ import shutil
 from sys import stdout
 from os.path import isfile, join, exists, abspath
 from .verify import verify_full_directory
-from .utils.utils import is_valid_lang_dir
+from .utils.langs import is_valid_lang_dir, doxygen_languages
 from .utils.postprocess import available_postprocesses
 from .utils.html_builder import PrepareTemplates, HTMLBuilder
 
@@ -289,10 +289,6 @@ class Gendoc:
             if re.match(r"^FILTER_PATTERNS\s*=", line.strip()):
                 lines[n] = f"FILTER_PATTERNS = *py=.dthb\n"
 
-            # Optimise Doxygen output for Python
-            if re.match(r"^OPTIMIZE_OUTPUT_JAVA\s*=", line.strip()):
-                lines[n] = f"OPTIMIZE_OUTPUT_JAVA = YES\n"
-
         with open(doxygen_file_name, 'w', encoding='utf-8') as f:
             f.writelines(lines)
 
@@ -342,6 +338,10 @@ class Gendoc:
             # Change HTML output
             if re.match(r"^HTML_OUTPUT\s*=", line.strip()):
                 lines[n] = f"HTML_OUTPUT = {self.docs_output_path}/{lang}/\n"
+
+            if re.match(r"^OUTPUT_LANGUAGE\s*=", line.strip()):
+                if lang in doxygen_languages.keys():
+                    lines[n] = f"OUTPUT_LANGUAGE = {doxygen_languages[lang]}\n"
 
         with open(doxygen_file_name, 'w', encoding='utf-8') as f:
             f.writelines(lines)
