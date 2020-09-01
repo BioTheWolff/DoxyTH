@@ -1,0 +1,64 @@
+&doc_id class
+"""
+Classe automatiquement appelée par Doxygen comme un processeur de fichier.
+
+Ce fichier (donc cette classe) est automatiquement appelée par Doxygen pour qu'elle travaille sur un fichier qui suit la
+règle définie dans l'option de configuration FILE_PATTERNS.
+Par défaut, DoxyTH mets la valeur de FILE_PATTERNS à "*py=.dthb", ".dthb" étant le fichier batch appelé par Doxygen
+quand il rencontre un fichier se terminant par ".py".
+
+Le fichier batch contient "python -m doxyth.doxyth <lang> %1", LANG étant la langue actuelle, automatiquement changée
+par la classe Gendoc chaque fois qu'on change de langue.
+
+Le fichier dont le chemin est donné est alors lu, et chaque doc_id référencé et toutes les lignes de documentation
+où le doc_id a été trouvé sont remplacées par la documentation liée à cet identifiant.
+
+Le fichier est ensuite écrit dans la console ligne par ligne pour que Doxygen le lise et le process.
+Si un post-processus a été défini, les lignes du fichier, plutôt que d'être écrites, sont données au post-processus qui
+s'occupera de les écrire dans la console après avoir fait son travail sur les lignes.
+"""
+
+&doc_id flow
+"""
+La fonction d'éxécution
+
+On va chercher les lignes de documentation et les identifiants pour cette langue, et ensuite toutes les lignes
+du fichier.
+On appelle la fonction de modification des lignes et ensuite écrit les lignes ou les transmet au post-processus.
+
+Args:
+    args: Les arguments d'argparse
+"""
+
+&doc_id fetch_data_file
+"""
+Va simplement chercher le contenu du fichier temporaire qui contient les données générées par DoxyTH
+
+Returns:
+    le contenu du fichier
+"""
+
+&doc_id fetch_file_lines
+"""
+Va simplement lire le fichier et retourne ses lignes.
+
+Args:
+    path: Le chemin du fichier
+
+Returns:
+    Les lignes du fichier
+"""
+
+&doc_id modify_lines
+"""
+La fonction principale de cette classe. Travaille sur les lignes du fichier pour remplacer les lignes de documentation.
+
+La fonction lit le fichier ligne par ligne, et cherche les doc_id dans les lignes de documentation. Si plusieurs
+identifiants sont trouvés dans une seule documentation, seul le premier compte et sera utilisé comme référence.
+
+Une fois que le fichier est entièrement lu, chaque bloc de documentation (ensemble des lignes) contenant un doc_id est
+remplacé par le bloc de documentation correspondant à l'identifiant.
+
+Returns:
+    Les lignes modifiées du fichier
+"""

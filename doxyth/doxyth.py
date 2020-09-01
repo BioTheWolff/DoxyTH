@@ -1,57 +1,53 @@
-from .utils.langs import ascii_encode
+from .utils.langs import ascii_encode, convert_lines_to_html_chars
 
 ## @package doxyth
 #
-# Package that contains the DoxyTH class, used by Doxygen as a file pattern processor.
-# For more information about the Doxygen file patterns, see the DoxyTH class documentation.
+# Package that contains the DoxyTH class, used by Doxygen as a file_name pattern processor.
+# For more information about the Doxygen file_name patterns, see the DoxyTH class documentation.
 
 
 class DoxyTH:
     """
     ### &doc_id doxyth:class
 
-    Class that is made to be called by doxygen as a file pattern processor.
+    Class that is made to be called by doxygen as a file_name pattern processor.
 
-    This file (and class) is automatically called by Doxygen for it to process any file Doxygen encounters that follows
+    This file_name (and class) is automatically called by Doxygen for it to process any file_name Doxygen encounters that follows
     the rule defined in the FILE_PATTERNS option of the config.
-    By default, DoxyTH sets the FILE_PATTERNS value of the Doxygen config to "*py=.dthb", ".dthb" being the batch file
-    called by Doxygen when it encounters any file ending by ".py".
+    By default, DoxyTH sets the FILE_PATTERNS value of the Doxygen config to "*py=.dthb", ".dthb" being the batch file_name
+    called by Doxygen when it encounters any file_name ending by ".py".
 
-    The batch file has "python -m doxyth.doxyth <lang> %1" as content. LANG is automatically changed by the gendoc class
-    each time we change language. Doxygen then passes the file path, which is taken by the DoxyTH class as an input.
+    The batch file_name has "python -m doxyth.doxyth <lang> %1" as content. LANG is automatically changed by the gendoc class
+    each time we change language. Doxygen then passes the file_name path, which is taken by the DoxyTH class as an input.
 
-    The file is methodically read, and every doc_id matching the default regex pattern is registered, and then the whole
+    The file_name is methodically read, and every doc_id matching the default regex pattern is registered, and then the whole
     doclines where the doc_id has been found are replaced by the linked documentation for this language.
 
-    The file is then printed line per line for Doxygen to read it back and process it. If a postprocessing has been
-    set upon running Gendoc, the file lines are instead sent to the postprocess (doxypy, doxypypy, etc.) which will
+    The file_name is then printed line per line for Doxygen to read it back and process it. If a postprocessing has been
+    set upon running Gendoc, the file_name lines are instead sent to the postprocess (doxypy, doxypypy, etc.) which will
     take care of printing the line itself, after doing its job. The lines are sent through a class built for said
     postprocess, that acts as a bridge between what DoxyTH produced and what the postprocess requires.
     """
 
-    ## The current doxyTH config (retrieved from the generated data file)
+    ## The current doxyTH config (retrieved from the generated data file_name)
     config = None
     ## The current language
     lang = None
-    ## The file name
+    ## The file_name name
     filename = None
     ## The translations for this language
     docs = None
-    ## The file lines
+    ## The file_name lines
     lines = None
 
+    ## Init
     def __init__(self):
-        """
-        ### &doc_id doxyth:init
-
-        Parses the args
-        """
 
         import argparse
 
         parser = argparse.ArgumentParser()
         parser.add_argument("lang", help="The language to translate the doc to")
-        parser.add_argument("filename", help="The file to replace the docs into")
+        parser.add_argument("filename", help="The file_name to replace the docs into")
         args = parser.parse_args()
 
         self.__flow(args)
@@ -62,7 +58,7 @@ class DoxyTH:
 
         The flow function
 
-        We fetch the doc lines for this language, and then all the file lines.
+        We fetch the doc lines for this language, and then all the file_name lines.
         We call the lines modifier function and then either print the lines or send them to the postprocess bridge.
 
         Args:
@@ -80,9 +76,10 @@ class DoxyTH:
         lines = self.__modify_lines()
 
         if self.config['postprocess']:
-            postprocess_dispatcher(self.config['postprocess'], args.filename, lines)
+            postprocess_dispatcher(self.config['postprocess'], args.filename, convert_lines_to_html_chars(lines))
         else:
-            for line in lines:
+            modified_lines = convert_lines_to_html_chars(lines)
+            for line in modified_lines:
                 try:
                     print(line.rstrip())
                 except UnicodeEncodeError:
@@ -93,10 +90,10 @@ class DoxyTH:
         """
         ### &doc_id doxyth:fetch_data_file
 
-        Simply fetches the generated data file and reads its content.
+        Simply fetches the generated data file_name and reads its content.
 
         Returns:
-            The content of the data file
+            The content of the data file_name
         """
 
         import json
@@ -111,13 +108,13 @@ class DoxyTH:
         """
         ### &doc_id doxyth:fetch_file_lines
 
-        Simply reads the file and returns its lines.
+        Simply reads the file_name and returns its lines.
 
         Args:
-            path: The file path
+            path: The file_name path
 
         Returns:
-            The file lines
+            The file_name lines
         """
 
         with open(path, encoding='utf-8') as f:
@@ -128,15 +125,15 @@ class DoxyTH:
         """
         ### &doc_id doxyth:modify_lines
 
-        The main function of this class. Processes the file lines to replace the doc_ids.
+        The main function of this class. Processes the file_name lines to replace the doc_ids.
 
-        The function reads the file line per line, and only looks for a doc_id in doclines. If multiple IDs are found in
+        The function reads the file_name line per line, and only looks for a doc_id in doclines. If multiple IDs are found in
         one doc, only the first is kept as an ID.
-        Once the file is entirely read, each doclines containing a doc ID are replaced by the matching doclines
-        registered in the translations file(s) of this language.
+        Once the file_name is entirely read, each doclines containing a doc ID are replaced by the matching doclines
+        registered in the translations file_name(s) of this language.
 
         Returns:
-            The modified file lines
+            The modified file_name lines
         """
 
         import re

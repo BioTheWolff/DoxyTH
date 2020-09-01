@@ -6,10 +6,10 @@ from .utils.langs import is_valid_lang_dir, ascii_encode
 
 ## @package verify
 #
-# This package contains the functions that allow the user to check the format and contents of a directory or file.
-# If executed to verify a file, prints the number of doc_ids found and linked to a documentation.
-# If executed to verify a language directory, prints the file names and the number of doc_ids found and linked to a
-# documentation inside this file.
+# This package contains the functions that allow the user to check the format and contents of a directory or file_name.
+# If executed to verify a file_name, prints the number of doc_ids found and linked to a documentation.
+# If executed to verify a language directory, prints the file_name names and the number of doc_ids found and linked to a
+# documentation inside this file_name.
 # If executed to verify the full translations directory, it will instead print the number of doc_ids found for each
 # language, allowing you to check that all the languages have to same amount of doc_ids.
 
@@ -18,16 +18,16 @@ def main():
     """
     ### &doc_id verify:main
 
-    The main function of the verify file, executes when you run the file.
+    The main function of the verify file_name, executes when you run the file_name.
 
-    It allows to check that the full/language directory, or a specific file, follows the right format.
+    It allows to check that the full/language directory, or a specific file_name, follows the right format.
 
     Argparse usage:
-        usage: verify.py [-h] {directory,dir,d,languagedirectory,langdir,ld,file,f} documentation
+        usage: verify.py [-h] {directory,dir,d,languagedirectory,langdir,ld,file_name,f} documentation
     Subparsers:
         directory (dir, d): refer to the full translations directory
         languagedirectory (langdir, ld): refer to a language directory
-        file (f): refer to a lone translations file
+        file_name (f): refer to a lone translations file_name
     """
 
     parser = argparse.ArgumentParser()
@@ -42,9 +42,9 @@ def main():
                                        aliases=["langdir", "ld"])
     dir_parser.add_argument("documentation", help="The language directory to verify")
 
-    file_parser = subparsers.add_parser("file", help="Verify the documentation format of a file",
+    file_parser = subparsers.add_parser("file_name", help="Verify the documentation format of a file_name",
                                         aliases=["f"])
-    file_parser.add_argument("documentation", help="The file to verify")
+    file_parser.add_argument("documentation", help="The file_name to verify")
 
     args = parser.parse_args()
 
@@ -52,7 +52,7 @@ def main():
         verify_full_directory(args.documentation)
     elif args.subparser in ["languagedirectory", "langdir", "ld"]:
         verify_lang_directory(args.documentation)
-    elif args.subparser in ["file", "f"]:
+    elif args.subparser in ["file_name", "f"]:
         verify_file(args.documentation)
 
 
@@ -60,11 +60,11 @@ def verify_file(path, lone_file=True, no_print=False):
     """
     ### &doc_id verify:verify_file
 
-    Reads a documentation file, and parses it.
+    Reads a documentation file_name, and parses it.
 
     Args:
-        path: The path to the file
-        lone_file: Whether it is a lone file or part of a directory sweep
+        path: The path to the file_name
+        lone_file: Whether it is a lone file_name or part of a directory sweep
         no_print: Whether we should forbid this function to print results (used for the full directory sweep)
     """
 
@@ -92,7 +92,7 @@ def verify_file(path, lone_file=True, no_print=False):
             just_read_id = False
         elif stripped_line == '"""' and not just_read_id:
             if buffer_name in final.keys():
-                print(f"ID {buffer_name} found multiple times in the same file.")
+                print(f"ID {buffer_name} found multiple times in the same file_name.")
                 exit()
             final[buffer_name] = buffer
             buffer_name, buffer = None, []
@@ -107,7 +107,7 @@ def verify_file(path, lone_file=True, no_print=False):
         if print_file_name:
             print(path.split('/')[-1])
         if buffer or buffer_name:
-            print(f"{offset}Warning: Unexpected EOF while reading file.")
+            print(f"{offset}Warning: Unexpected EOF while reading file_name.")
         else:
             print(f"{offset}File read correctly. Found {len(final)} entries.")
 
@@ -118,7 +118,7 @@ def verify_lang_directory(path, no_print=False):
     """
     ### &doc_id verify:lang_directory
 
-    Verifies a language directory, file per file.
+    Verifies a language directory, file_name per file_name.
 
     Args:
         path: The path to the language directory

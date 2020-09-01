@@ -76,10 +76,14 @@ $(function() {
 <div class="title">Référence de la classe doxyth.utils.html_builder.HTMLBuilder</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Construit le fichier HTML en partant du template et du snippet de langue.  
+ <a href="classdoxyth_1_1utils_1_1html__builder_1_1_h_t_m_l_builder.html#details">Plus de détails...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Fonctions membres publiques</h2></td></tr>
 <tr class="memitem:a49d3155c3d00fd7ac1b16e08f6a38a0e"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdoxyth_1_1utils_1_1html__builder_1_1_h_t_m_l_builder.html#a49d3155c3d00fd7ac1b16e08f6a38a0e">__init__</a> (self, output_dir, list <a class="el" href="classdoxyth_1_1utils_1_1html__builder_1_1_h_t_m_l_builder.html#aeaa98e8f35268f539371db51b492dd17">langs_list</a>, dict <a class="el" href="classdoxyth_1_1utils_1_1html__builder_1_1_h_t_m_l_builder.html#a2a33f3cc92918683bb650e516bcc1e4a">replacements</a>, str <a class="el" href="classdoxyth_1_1utils_1_1html__builder_1_1_h_t_m_l_builder.html#a433fcc9fdce380daca7229b58a30d3ce">template</a>, str lang_snippet_template)</td></tr>
+<tr class="memdesc:a49d3155c3d00fd7ac1b16e08f6a38a0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise et &eacute;x&eacute;cute la classe enti&egrave;re.  <a href="classdoxyth_1_1utils_1_1html__builder_1_1_h_t_m_l_builder.html#a49d3155c3d00fd7ac1b16e08f6a38a0e">Plus de détails...</a><br /></td></tr>
 <tr class="separator:a49d3155c3d00fd7ac1b16e08f6a38a0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
@@ -94,7 +98,7 @@ Attributs publics statiques</h2></td></tr>
 <tr class="separator:a2a33f3cc92918683bb650e516bcc1e4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a433fcc9fdce380daca7229b58a30d3ce"><td class="memItemLeft" align="right" valign="top"><a id="a433fcc9fdce380daca7229b58a30d3ce"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdoxyth_1_1utils_1_1html__builder_1_1_h_t_m_l_builder.html#a433fcc9fdce380daca7229b58a30d3ce">template</a> = None</td></tr>
-<tr class="memdesc:a433fcc9fdce380daca7229b58a30d3ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">The html layout template file. <br /></td></tr>
+<tr class="memdesc:a433fcc9fdce380daca7229b58a30d3ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">The html layout template file_name. <br /></td></tr>
 <tr class="separator:a433fcc9fdce380daca7229b58a30d3ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeaa98e8f35268f539371db51b492dd17"><td class="memItemLeft" align="right" valign="top"><a id="aeaa98e8f35268f539371db51b492dd17"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdoxyth_1_1utils_1_1html__builder_1_1_h_t_m_l_builder.html#aeaa98e8f35268f539371db51b492dd17">langs_list</a> = None</td></tr>
@@ -115,18 +119,22 @@ Fonctions membres privées</h2></td></tr>
 def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdoxyth_1_1utils_1_1html__builder_1_1_h_t_m_l_builder.html#aa4652b2adada1042a820105770eab2e6">__flow</a> (self)</td></tr>
 <tr class="memdesc:aa4652b2adada1042a820105770eab2e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The flow function. <br /></td></tr>
 <tr class="separator:aa4652b2adada1042a820105770eab2e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a14d0ad5ccef328291a50409dd5417f18"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdoxyth_1_1utils_1_1html__builder_1_1_h_t_m_l_builder.html#a14d0ad5ccef328291a50409dd5417f18">__build_languages_list</a> (self)</td></tr>
+<tr class="memitem:a14d0ad5ccef328291a50409dd5417f18"><td class="memItemLeft" align="right" valign="top"><a id="a14d0ad5ccef328291a50409dd5417f18"></a>
+def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdoxyth_1_1utils_1_1html__builder_1_1_h_t_m_l_builder.html#a14d0ad5ccef328291a50409dd5417f18">__build_languages_list</a> (self)</td></tr>
+<tr class="memdesc:a14d0ad5ccef328291a50409dd5417f18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construit la cha&icirc;ne de caract&egrave;res $langs depuis le snippet pour chaque langue. <br /></td></tr>
 <tr class="separator:a14d0ad5ccef328291a50409dd5417f18"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0345b7118d8bf4f4e5866b579f18c1c8"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdoxyth_1_1utils_1_1html__builder_1_1_h_t_m_l_builder.html#a0345b7118d8bf4f4e5866b579f18c1c8">__replace_in_template</a> (self)</td></tr>
+<tr class="memitem:a0345b7118d8bf4f4e5866b579f18c1c8"><td class="memItemLeft" align="right" valign="top"><a id="a0345b7118d8bf4f4e5866b579f18c1c8"></a>
+def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdoxyth_1_1utils_1_1html__builder_1_1_h_t_m_l_builder.html#a0345b7118d8bf4f4e5866b579f18c1c8">__replace_in_template</a> (self)</td></tr>
+<tr class="memdesc:a0345b7118d8bf4f4e5866b579f18c1c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remplace les variables ($NOM) par leur remplacement dans le dict. <br /></td></tr>
 <tr class="separator:a0345b7118d8bf4f4e5866b579f18c1c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a472def18da3c30f5ae7cd5f1b07cc203"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdoxyth_1_1utils_1_1html__builder_1_1_h_t_m_l_builder.html#a472def18da3c30f5ae7cd5f1b07cc203">__write_template_to_output</a> (self)</td></tr>
+<tr class="memitem:a472def18da3c30f5ae7cd5f1b07cc203"><td class="memItemLeft" align="right" valign="top"><a id="a472def18da3c30f5ae7cd5f1b07cc203"></a>
+def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdoxyth_1_1utils_1_1html__builder_1_1_h_t_m_l_builder.html#a472def18da3c30f5ae7cd5f1b07cc203">__write_template_to_output</a> (self)</td></tr>
+<tr class="memdesc:a472def18da3c30f5ae7cd5f1b07cc203"><td class="mdescLeft">&#160;</td><td class="mdescRight">&Eacute;crit le template modifi&eacute; dans le dossier de sortie sous le nom index.html <br /></td></tr>
 <tr class="separator:a472def18da3c30f5ae7cd5f1b07cc203"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Description détaillée</h2>
-<div class="textblock"><pre class="fragment">### &amp;doc_id html_builder:HTMLBuilder
-
-Builds the HTML file from the layout and the language snippet given.
-</pre> </div><h2 class="groupheader">Documentation des constructeurs et destructeur</h2>
+<div class="textblock"><p>Construit le fichier HTML en partant du template et du snippet de langue. </p>
+</div><h2 class="groupheader">Documentation des constructeurs et destructeur</h2>
 <a id="a49d3155c3d00fd7ac1b16e08f6a38a0e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a49d3155c3d00fd7ac1b16e08f6a38a0e">&#9670;&nbsp;</a></span>__init__()</h2>
 
@@ -176,105 +184,19 @@ Builds the HTML file from the layout and the language snippet given.
         </tr>
       </table>
 </div><div class="memdoc">
-<pre class="fragment">### &amp;doc_id html_builder:HTMLBuilder_init
 
-Initialises and runs the whole class.
+<p>Initialise et &eacute;x&eacute;cute la classe enti&egrave;re. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">output_dir</td><td>Le dossier de sortie o&ugrave; le index.html doit se situer </td></tr>
+    <tr><td class="paramname">langs_list</td><td>La listes des langues trouv&eacute;es par DoxyTH </td></tr>
+    <tr><td class="paramname">replacements</td><td>Le dictionnaire contenant les remplacements des variables </td></tr>
+    <tr><td class="paramname">template</td><td>La cha&icirc;ne de caract&egrave;res du template HTML </td></tr>
+    <tr><td class="paramname">lang_snippet_template</td><td>La cha&icirc;ne de caract&egrave;res du snippet de langue </td></tr>
+  </table>
+  </dd>
+</dl>
 
-Args:
-    output_dir: The output directory where the index.html should be located
-    langs_list: The list of languages processed by doxyTH
-    replacements: The dictionary containing the replacements to some variables in the layout or snippet
-    template: The string of the HTML layout template file
-    lang_snippet_template: The string of the language snippet template
-</pre> 
-</div>
-</div>
-<h2 class="groupheader">Documentation des fonctions membres</h2>
-<a id="a14d0ad5ccef328291a50409dd5417f18"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a14d0ad5ccef328291a50409dd5417f18">&#9670;&nbsp;</a></span>__build_languages_list()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">def doxyth.utils.html_builder.HTMLBuilder.__build_languages_list </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>self</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<pre class="fragment">### &amp;doc_id html_builder:build_languages_list
-
-Builds the $langs replacement from the snippet template, for each language.
-</pre> 
-</div>
-</div>
-<a id="a0345b7118d8bf4f4e5866b579f18c1c8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0345b7118d8bf4f4e5866b579f18c1c8">&#9670;&nbsp;</a></span>__replace_in_template()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">def doxyth.utils.html_builder.HTMLBuilder.__replace_in_template </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>self</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<pre class="fragment">### &amp;doc_id html_builder:replace_in_template
-
-Replaces the variables ($&lt;variable name&gt;) by their replacement in the dict
-</pre> 
-</div>
-</div>
-<a id="a472def18da3c30f5ae7cd5f1b07cc203"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a472def18da3c30f5ae7cd5f1b07cc203">&#9670;&nbsp;</a></span>__write_template_to_output()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">def doxyth.utils.html_builder.HTMLBuilder.__write_template_to_output </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>self</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<pre class="fragment">### &amp;doc_id html_builder:write_template_to_output
-
-Writes the modified template file to the output directory under the name index.html
-</pre> 
 </div>
 </div>
 <hr/>La documentation de cette classe a été générée à partir du fichier suivant :<ul>

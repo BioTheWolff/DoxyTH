@@ -1,4 +1,6 @@
-# The valid ISO 639-1 language codes
+from typing import List
+
+## The valid ISO 639-1 language codes
 valid_codes = ['ab', 'aa', 'af', 'ak', 'sq', 'am', 'ar', 'an', 'hy', 'as', 'av', 'ae', 'ay', 'az', 'bm', 'ba', 'eu',
                'be', 'bn', 'bh', 'bi', 'bs', 'br', 'bg', 'my', 'ca', 'ch', 'ce', 'ny', 'zh', 'cv', 'kw', 'co', 'cr',
                'hr', 'cs', 'da', 'dv', 'nl', 'dz', 'en', 'eo', 'et', 'ee', 'fo', 'fj', 'fi', 'fr', 'ff', 'gl', 'ka',
@@ -11,7 +13,7 @@ valid_codes = ['ab', 'aa', 'af', 'ak', 'sq', 'am', 'ar', 'an', 'hy', 'as', 'av',
                'ta', 'te', 'tg', 'th', 'ti', 'bo', 'tk', 'tl', 'tn', 'to', 'tr', 'ts', 'tt', 'tw', 'ty', 'ug', 'uk',
                'ur', 'uz', 've', 'vi', 'vo', 'wa', 'cy', 'wo', 'fy', 'xh', 'yi', 'yo', 'za', 'zu']
 
-# The available doxygen languages in codes, and the linked doxygen languages
+## The available doxygen languages in codes, and the linked doxygen languages
 doxygen_languages = {
     "af": "Afrikaans",
     "ar": "Arabic",
@@ -58,6 +60,103 @@ doxygen_languages = {
     "vi": "Vietnamese"
 }
 
+## UTF-8 chars to HTML chars
+html_chars_convert_dict = {'¡': '&iexcl;',
+                           '¢': '&cent;',
+                           '£': '&pound;',
+                           '¤': '&curren;',
+                           '¥': '&yen;',
+                           '¦': '&brvbar;',
+                           '§': '&sect;',
+                           '¨': '&uml;',
+                           '©': '&copy;',
+                           'ª': '&ordf;',
+                           '«': '&laquo;',
+                           '¬': '&not;',
+                           '\xad': '&shy;',
+                           '®': '&reg;',
+                           '¯': '&macr;',
+                           '°': '&deg;',
+                           '±': '&plusmn;',
+                           '²': '&sup2;',
+                           '³': '&sup3;',
+                           '´': '&acute;',
+                           'µ': '&micro;',
+                           '¶': '&para;',
+                           '·': '&middot;',
+                           '¸': '&cedil;',
+                           '¹': '&sup1;',
+                           'º': '&ordm;',
+                           '»': '&raquo;',
+                           '¼': '&frac14;',
+                           '½': '&frac12;',
+                           '¾': '&frac34;',
+                           '¿': '&iquest;',
+                           'À': '&Agrave;',
+                           'Á': '&Aacute;',
+                           'Â': '&Acirc;',
+                           'Ã': '&Atilde;',
+                           'Ä': '&Auml;',
+                           'Å': '&Aring;',
+                           'Æ': '&AElig;',
+                           'Ç': '&Ccedil;',
+                           'È': '&Egrave;',
+                           'É': '&Eacute;',
+                           'Ê': '&Ecirc;',
+                           'Ë': '&Euml;',
+                           'Ì': '&Igrave;',
+                           'Í': '&Iacute;',
+                           'Î': '&Icirc;',
+                           'Ï': '&Iuml;',
+                           'Ð': '&ETH;',
+                           'Ñ': '&Ntilde;',
+                           'Ò': '&Ograve;',
+                           'Ó': '&Oacute;',
+                           'Ô': '&Ocirc;',
+                           'Õ': '&Otilde;',
+                           'Ö': '&Ouml;',
+                           '×': '&times;',
+                           'Ø': '&Oslash;',
+                           'Ù': '&Ugrave;',
+                           'Ú': '&Uacute;',
+                           'Û': '&Ucirc;',
+                           'Ü': '&Uuml;',
+                           'Ý': '&Yacute;',
+                           'Þ': '&THORN;',
+                           'ß': '&szlig;',
+                           'à': '&agrave;',
+                           'á': '&aacute;',
+                           'â': '&acirc;',
+                           'ã': '&atilde;,',
+                           'ä': '&auml;',
+                           'å': '&aring;',
+                           'æ': '&aelig;',
+                           'ç': '&ccedil;',
+                           'è': '&egrave;',
+                           'é': '&eacute;',
+                           'ê': '&ecirc;',
+                           'ë': '&euml;',
+                           'ì': '&igrave;',
+                           'í': '&iacute;',
+                           'î': '&icirc;',
+                           'ï': '&iuml;',
+                           'ð': '&eth;',
+                           'ñ': '&ntilde;',
+                           'ò': '&ograve;',
+                           'ó': '&oacute;',
+                           'ô': '&ocirc;',
+                           'õ': '&otilde;',
+                           'ö': '&ouml;',
+                           '÷': '&divide;',
+                           'ø': '&oslash;',
+                           'ù': '&ugrave;',
+                           'ú': '&uacute;',
+                           'û': '&ucirc;',
+                           'ü': '&uuml;',
+                           'ý': '&yacute;',
+                           'þ': '&thorn;',
+                           'ÿ': '&yuml;'}
+
 
 def is_valid_lang_dir(name):
     """
@@ -85,3 +184,12 @@ def ascii_encode(string: str):
     """
 
     return str(string.encode('ascii', 'ignore'))[2:-1]
+
+
+def convert_lines_to_html_chars(lines: List[str]):
+    final = lines
+    for char in html_chars_convert_dict:
+        if any(char in line for line in lines):
+            for n, line in enumerate(final):
+                final[n] = line.replace(char, html_chars_convert_dict[char])
+    return final

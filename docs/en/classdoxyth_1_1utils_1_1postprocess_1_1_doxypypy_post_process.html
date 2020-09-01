@@ -74,17 +74,22 @@ $(function() {
 <div class="title">doxyth.utils.postprocess.DoxypypyPostProcess Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>The class that serves as a bridge between DoxyTH and Doxypypy.  
+ <a href="classdoxyth_1_1utils_1_1postprocess_1_1_doxypypy_post_process.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a8f60d3b590ef8430d5edfb23d63de56b"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdoxyth_1_1utils_1_1postprocess_1_1_doxypypy_post_process.html#a8f60d3b590ef8430d5edfb23d63de56b">__init__</a> (self)</td></tr>
+<tr class="memdesc:a8f60d3b590ef8430d5edfb23d63de56b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to import doxypypy, and raises an exception if the module is not installed.  <a href="classdoxyth_1_1utils_1_1postprocess_1_1_doxypypy_post_process.html#a8f60d3b590ef8430d5edfb23d63de56b">More...</a><br /></td></tr>
 <tr class="separator:a8f60d3b590ef8430d5edfb23d63de56b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2872493c024d2391af034b531500c1f8"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdoxyth_1_1utils_1_1postprocess_1_1_doxypypy_post_process.html#a2872493c024d2391af034b531500c1f8">__call__</a> (self, filename, lines)</td></tr>
+<tr class="memdesc:a2872493c024d2391af034b531500c1f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The main bridge between DoxyTH and Doxypypy.  <a href="classdoxyth_1_1utils_1_1postprocess_1_1_doxypypy_post_process.html#a2872493c024d2391af034b531500c1f8">More...</a><br /></td></tr>
 <tr class="separator:a2872493c024d2391af034b531500c1f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><pre class="fragment">The class that serves as a bridge between DoxyTH and Doxypypy
-</pre> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<div class="textblock"><p>The class that serves as a bridge between DoxyTH and Doxypypy. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a8f60d3b590ef8430d5edfb23d63de56b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8f60d3b590ef8430d5edfb23d63de56b">&#9670;&nbsp;</a></span>__init__()</h2>
 
@@ -100,11 +105,15 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<pre class="fragment">Tries to import doxypypy, and raises an exception if the module is not installed
 
-Raises:
-    ModuleNotFoundError: if the module is not installed/found
-</pre> 
+<p>Tries to import doxypypy, and raises an exception if the module is not installed. </p>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">ModuleNotFoundError</td><td>if the module is not installed/found </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -139,12 +148,17 @@ Raises:
         </tr>
       </table>
 </div><div class="memdoc">
-<pre class="fragment">The main bridge between DoxyTH and Doxypypy. Re-creates the doxypypy variables and gives it to the AstWalker
 
-Args:
-    filename: The file name
-    lines: The file lines
-</pre> 
+<p>The main bridge between DoxyTH and Doxypypy. </p>
+<p>Re-creates the doxypypy variables and gives it to the AstWalker</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>The file name </td></tr>
+    <tr><td class="paramname">lines</td><td>The file lines </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>

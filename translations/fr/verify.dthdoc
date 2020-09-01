@@ -1,0 +1,40 @@
+&doc_id main
+"""
+La fonction principale du fichier, qui s'éxécute quadn on lance le fichier.
+
+Permet de verifier qu'un dossier complet/de langue, ou un fichier spécifique, suit le bon format.
+
+Usage argparse:
+    usage: verify.py [-h] {directory,dir,d,languagedirectory,langdir,ld,file,f} documentation
+Sous-parseurs:
+    directory (dir, d): Regarde le dossier complet des traductions
+    languagedirectory (langdir, ld): Regarde un dossier de langue
+    file (f): Regarde un fichier seul
+"""
+
+&doc_id verify_file
+"""
+Lis un fichier de documentation et le parse.
+
+Args:
+    path: Le chemin du fichier
+    lone_file: Si on traite un fichier seul ou si l'examen fait partie d'un test sur un dossier
+    no_print: Si on doit interdire à cette fonction d'écrire dans la console (utilisé pour l'étude du dossier complet)
+"""
+
+&doc_id lang_directory
+"""
+Vérifie un dossier de langue, fichier par fichier.
+
+Args:
+    path: Le chemin du dossier de langue
+    no_print: Si la fonction verify_file doit être interdite d'écrire dans la console
+"""
+
+&doc_id verify_full_directory
+"""
+Vérifie le dossier complet des traductions.
+
+Args:
+    path: Le chemin vers le dossier de traductions
+"""

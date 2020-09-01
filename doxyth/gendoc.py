@@ -30,13 +30,13 @@ class Gendoc:
 
     You need to input a path to a "translations directory". The structure must be:
     one subdirectory for each language, named by said language code, following the ISO 639-1 naming convention.
-    In each subdirectory, all files you want to be read by DoxyTH must end by ".dthdoc" (DoxyTH Documentation file).
+    In each subdirectory, all files you want to be read by DoxyTH must end by ".dthdoc" (DoxyTH Documentation file_name).
     For more details about the .dthdoc files structure, see DoxyTH class documentation.
 
     The output is as follows:
     A main page (index.html) for the language selection.
     For each language: a subdirectory named with the language code (following the ISO 639-1) of said language.
-    The subdirectories all contain a Doxygen generation, with the in-file doclines replaced by DoxyTH following the
+    The subdirectories all contain a Doxygen generation, with the in-file_name doclines replaced by DoxyTH following the
     translations rules defined in all the .dthdoc files.
     """
 
@@ -70,7 +70,7 @@ class Gendoc:
         # General options
         parser.add_argument("-V", "--version", help="Prints the version, then exits.", action="store_true")
         parser.add_argument("--noverbose", help="De-activates the program verbose mode.", action='store_true')
-        parser.add_argument("-F", "--nofileprefix", help="De-activates the file prefix in front of the doc_id.",
+        parser.add_argument("-F", "--nofileprefix", help="De-activates the file_name prefix in front of the doc_id.",
                             action='store_true')
         # Config options
         parser.add_argument("-D", "--doxyfile", help="The path to an already existing Doxyfile that DoxyTH will use as "
@@ -78,7 +78,7 @@ class Gendoc:
         parser.add_argument("-O", "--output", help="The path to the output directory. If not provided, defaults to "
                                                    "docs/")
         parser.add_argument("-P", "--postprocess", help="The process to run after using DoxyTH. This process"
-                                                        "will return the file lines to Doxygen.")
+                                                        "will return the file_name lines to Doxygen.")
         parser.add_argument("--listpostprocesses", help="List the available postprocesses, then exits.",
                             action='store_true')
         # Doxygen print output options
@@ -113,7 +113,7 @@ class Gendoc:
                 doxythversion = 'v' + doxythversion
             except (FileNotFoundError, ModuleNotFoundError):
                 doxythversion = '<unknown version>.' \
-                                '\nThe version file is missing, you should reinstall DoxyTH to fix this.'
+                                '\nThe version file_name is missing, you should reinstall DoxyTH to fix this.'
             print(f"DoxyTH {doxythversion}")
             exit(0)
 
@@ -142,7 +142,7 @@ class Gendoc:
                     print(f"{lang.upper()}: Reading docs... ", end="")
                 self.langs[lang] = self.read_docs(f"{args.translation_dir}/{lang}", args.nofileprefix)
 
-            # write translations into a json file so the doxyth executable can fetch translations quickly
+            # write translations into a json file_name so the doxyth executable can fetch translations quickly
             self.write_config()
 
             # Edit or create doxygen config
@@ -181,7 +181,7 @@ class Gendoc:
                         else:
                             print("OK")
 
-            # now creating the language selection file into the output directory
+            # now creating the language selection file_name into the output directory
             self.delegate_create_lang_selection_file()
 
             # CLEANUP
@@ -220,11 +220,11 @@ class Gendoc:
         """
         ### &doc_id gendoc:delegate_lang_file
 
-        Creates the language selection file from the corresponding templates
+        Creates the language selection file_name from the corresponding templates
         """
 
         if self.verbose:
-            print("Creating language selection file")
+            print("Creating language selection file_name")
 
         try:
             from .version import version as doxythversion
@@ -248,7 +248,7 @@ class Gendoc:
             with open(abspath(self.translations_dir) + os.sep + '_SNIPPET.html') as s:
                 snippet = s.read()
 
-        # Build the HTML file
+        # Build the HTML file_name
         HTMLBuilder(self.docs_output_path, self.available_translations, replacements, template, snippet)
 
     @staticmethod
@@ -290,7 +290,7 @@ class Gendoc:
 
         Setups the doxygen-related files.
 
-        The files are: the doxygen config file (named .dthdoxy), the batch file (.dthb.bat) and the list of all
+        The files are: the doxygen config file_name (named .dthdoxy), the batch file_name (.dthb.bat) and the list of all
         the translations/config (inside .dtht)
 
         Args:
@@ -325,7 +325,7 @@ class Gendoc:
                 fnull.close()
 
         if self.verbose:
-            print("Modifying Doxygen config file... ", end="")
+            print("Modifying Doxygen config file_name... ", end="")
 
         with open(doxygen_file_name, encoding='utf-8') as f:
             lines = f.readlines()
@@ -352,7 +352,7 @@ class Gendoc:
             if re.match(r"^GENERATE_LATEX\s*=", stripped_line):
                 lines[n] = "GENERATE_LATEX = NO\n"
 
-            # The DoxyTH batch file that will tell the file ran by Doxygen what translation to read
+            # The DoxyTH batch file_name that will tell the file_name ran by Doxygen what translation to read
             if re.match(r"^FILTER_PATTERNS\s*=", stripped_line):
                 lines[n] = f"FILTER_PATTERNS = *py=.dthb\n"
 
@@ -390,7 +390,7 @@ class Gendoc:
 
         Adapts the configuration files to the current language being processed.
 
-        Changes the HTML output of doxygen, and the language parameter in the batch file to tell the doxyth
+        Changes the HTML output of doxygen, and the language parameter in the batch file_name to tell the doxyth
         executable the right language to look at
 
         Args:
@@ -418,7 +418,7 @@ class Gendoc:
         with open(doxygen_file_name, 'w', encoding='utf-8') as f:
             f.writelines(lines)
 
-        # batch file
+        # batch file_name
         with open('.dthb.bat', 'w', encoding='utf-8') as b:
             b.write(f"python -m doxyth.doxyth {lang} %1")
 
@@ -426,7 +426,7 @@ class Gendoc:
         """
         ### &doc_id gendoc:write_config
 
-        Self-explanatory. Writes a JSON dump of all the collected language documentations in the .dtht file,
+        Self-explanatory. Writes a JSON dump of all the collected language documentations in the .dtht file_name,
         alongside the config options.
         """
 
@@ -466,11 +466,11 @@ class Gendoc:
         Reads the documentation files and stores each documentation text.
 
         This function reads the documentation files in the language directory provided, and stores all the valid
-        references for further use during the replacing phase by the doxyth file.
+        references for further use during the replacing phase by the doxyth file_name.
 
         Args:
             path: The language directory path to read through.
-            nofileprefix: Whether to deactivate the file prefix or not
+            nofileprefix: Whether to deactivate the file_name prefix or not
         """
 
         files = [f for f in os.listdir(path) if isfile(join(path, f)) and f.endswith(".dthdoc")]
@@ -500,7 +500,7 @@ class Gendoc:
                     just_read_id = False
                 elif stripped_line == '"""' and not just_read_id:
                     if buffer_name in final.keys():
-                        raise Exception(f"ID {buffer_name} found multiple times in the same file.")
+                        raise Exception(f"ID {buffer_name} found multiple times in the same file_name.")
 
                     if nofileprefix:
                         file_doc[buffer_name] = buffer
@@ -515,7 +515,7 @@ class Gendoc:
                     buffer.append(stripped_line + '\n')
 
             if buffer or buffer_name:
-                raise Exception(f"Warning: Unexpected EOF while reading ID {buffer_name} in file "
+                raise Exception(f"Warning: Unexpected EOF while reading ID {buffer_name} in file_name "
                                 f"'{path.split('/')[-1]}'")
 
             for doc_id in file_doc.keys():

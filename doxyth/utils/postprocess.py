@@ -30,8 +30,8 @@ class DoxypypyPostProcess:
         The main bridge between DoxyTH and Doxypypy. Re-creates the doxypypy variables and gives it to the AstWalker
 
         Args:
-            filename: The file name
-            lines: The file lines
+            filename: The file_name name
+            lines: The file_name lines
         """
 
         from doxypypy.doxypypy import AstWalker
@@ -69,12 +69,12 @@ def postprocess_dispatcher(postprocess: str, filename, lines):
     """
     ### &doc_id postprocess:dispatcher
 
-    Dispatches the file name and lines to the right class, depending on the postprocess string given
+    Dispatches the file_name name and lines to the right class, depending on the postprocess string given
 
     Args:
         postprocess: The string of the postprocess, taken directly from the command line argument
-        filename: The file name
-        lines: The file lines
+        filename: The file_name name
+        lines: The file_name lines
     """
 
     if postprocess not in available_postprocesses:

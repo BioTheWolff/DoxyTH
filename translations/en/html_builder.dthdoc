@@ -22,7 +22,7 @@ Builds the $langs replacement from the snippet template, for each language.
 
 &doc_id replace_in_template
 """
-Replaces the variables ($<variable name>) by their replacement in the dict
+Replaces the variables ($NAME) by their replacement in the dict
 """
 
 &doc_id write_template_to_output
@@ -67,5 +67,5 @@ Args:
 Writes the templates in the corresponding files
 
 Args:
-    file: Either 'template' or 'snippet', to render either of the two.
+    file_name: Either 'template' or 'snippet', to render either of the two.
 """

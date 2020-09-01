@@ -2,21 +2,21 @@ from os import sep
 
 ## @package html_builder
 #
-# Contains the classes that build the language selection html file
+# Contains the classes that build the language selection html file_name
 
 
 class HTMLBuilder:
     """
     ### &doc_id html_builder:HTMLBuilder
 
-    Builds the HTML file from the layout and the language snippet given.
+    Builds the HTML file_name from the layout and the language snippet given.
     """
 
     ## The output directory
     output = None
     ## The replacements dictionary
     replacements = None
-    ## The html layout template file
+    ## The html layout template file_name
     template = None
     ## The list of languages
     langs_list = None
@@ -35,7 +35,7 @@ class HTMLBuilder:
             output_dir: The output directory where the index.html should be located
             langs_list: The list of languages processed by doxyTH
             replacements: The dictionary containing the replacements to some variables in the layout or snippet
-            template: The string of the HTML layout template file
+            template: The string of the HTML layout template file_name
             lang_snippet_template: The string of the language snippet template
         """
         self.output = output_dir
@@ -80,7 +80,7 @@ class HTMLBuilder:
         """
         ### &doc_id html_builder:write_template_to_output
 
-        Writes the modified template file to the output directory under the name index.html
+        Writes the modified template file_name to the output directory under the name index.html
         """
 
         with open(self.output + '/index.html', 'w', encoding='utf-8') as f:
@@ -105,7 +105,7 @@ class PrepareTemplates:
         Prepares the path of the resources folder
 
         Args:
-            gendoc_path: The path of the gendoc file (this class should only be run by gendoc or verify for accurate
+            gendoc_path: The path of the gendoc file_name (this class should only be run by gendoc or verify for accurate
             location of the resources folder)
         """
 
@@ -205,21 +205,21 @@ class GenerateTemplates:
 
         self.path = resources_path
 
-    def __call__(self, file):
+    def __call__(self, file_name):
         """
         ### &doc_id html_builder:GenerateTemplates_call
 
         Writes the templates in the corresponding files
 
         Args:
-            file: Either 'template' or 'snippet', to render either of the two.
+            file_name: Either 'template' or 'snippet', to render either of the two.
         """
 
-        if file == 'template':
+        if file_name == 'template':
             with open(self.path + sep + 'template.html', 'w', encoding='utf-8') as f:
                 formatted = "".join([line.strip() + '\n' for line in self.template.split('\n')])
                 f.write(formatted)
-        elif file == 'snippet':
+        elif file_name == 'snippet':
             with open(self.path + sep + 'lang_snippet.html', 'w', encoding='utf-8') as f:
                 formatted = "".join([line.strip() + '\n' for line in self.snippet.split('\n')])
                 f.write(formatted)

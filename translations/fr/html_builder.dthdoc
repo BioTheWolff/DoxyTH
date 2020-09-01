@@ -1,0 +1,71 @@
+&doc_id HTMLBuilder
+"""
+Construit le fichier HTML en partant du template et du snippet de langue.
+"""
+
+&doc_id HTMLBuilder_init
+"""
+Initialise et éxécute la classe entière.
+
+Args:
+    output_dir: Le dossier de sortie où le index.html doit se situer
+    langs_list: La listes des langues trouvées par DoxyTH
+    replacements: Le dictionnaire contenant les remplacements des variables
+    template: La chaîne de caractères du template HTML
+    lang_snippet_template: La chaîne de caractères du snippet de langue
+"""
+
+&doc_id build_languages_list
+"""
+Construit la chaîne de caractères $langs depuis le snippet pour chaque langue.
+"""
+
+&doc_id replace_in_template
+"""
+Remplace les variables ($NOM) par leur remplacement dans le dict
+"""
+
+&doc_id write_template_to_output
+"""
+Écrit le template modifié dans le dossier de sortie sous le nom index.html
+"""
+
+&doc_id PrepareTemplates
+"""
+Petite classe qui va chercher le template du dossier resources/ du module
+"""
+
+&doc_id PrepareTemplates_init
+"""
+Prépare le chemin du dossier resources
+(Cette classe ne devrait être lancée que par gendoc ou verify pour avoir le vrai chemin du dossier resources)
+
+Args:
+    gendoc_path: Le chemin du fichier gendoc
+"""
+
+&doc_id PrepareTemplates_call
+"""
+Ouvre et lis les templates, et renvoie leurs contenus.
+"""
+
+&doc_id GenerateTemplates
+"""
+La classe qui génère les templates depuis les chaînes de caractères, et les met dans le dossier resources.
+"""
+
+&doc_id GenerateTemplates_init
+"""
+Sauvegarde le chemin des resources
+
+Args:
+    resources_path: Le chemin
+"""
+
+&doc_id GenerateTemplates_call
+"""
+Écrit le template dans le fichier correspondant
+
+Args:
+    file_name: Soit 'template' soit 'snippet', selon ce qu'on veut que la classe écrive.
+"""
